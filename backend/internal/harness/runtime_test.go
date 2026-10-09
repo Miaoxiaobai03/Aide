@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/executiontrace"
-	"offerpilot/backend/internal/llm"
+	"aide/backend/internal/executiontrace"
+	"aide/backend/internal/llm"
 )
 
 type trackingClient struct {

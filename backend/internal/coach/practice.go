@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/interview"
 )
 
 // StartPractice retains the legacy service contract for offline regression fixtures.

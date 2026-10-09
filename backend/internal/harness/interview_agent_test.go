@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/llm"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/llm"
 )
 
 type recordingStructuredClient struct {
@@ -157,9 +157,9 @@ func TestInterviewAgentPlansCoverageFromSemanticSignalsAndCandidateIDs(t *testin
 
 	request := interview.PlanCoverageRequest{
 		Config:                 interview.InterviewConfig{Focus: interview.FocusMixed, Difficulty: interview.DifficultyHard, QuestionCount: 7},
-		CurrentCoveragePointID: "project-offerpilot",
+		CurrentCoveragePointID: "project-aide",
 		PreviousQuestion: interview.Question{
-			ID: "q2", Kind: interview.QuestionProject, CoveragePointID: "project-offerpilot",
+			ID: "q2", Kind: interview.QuestionProject, CoveragePointID: "project-aide",
 		},
 		PreviousAssessment: interview.Assessment{
 			Correctness: 4, Depth: 3, Specificity: 3, Ownership: 4, Metrics: 3, Tradeoffs: 3,
@@ -167,7 +167,7 @@ func TestInterviewAgentPlansCoverageFromSemanticSignalsAndCandidateIDs(t *testin
 			ClaimChecks: []interview.ClaimCheck{{Claim: "吞吐提升十倍", Verdict: interview.ClaimUnverified, EvidenceRefs: []interview.EvidenceRef{}}},
 		},
 		Candidates: []interview.CoverageCandidate{
-			{CoveragePointID: "project-offerpilot", Area: interview.FocusProjects, Label: "OfferPilot 项目", Priority: 80, QuestionCount: 2, LastAskedTurn: 2, EvidenceRefs: []interview.EvidenceRef{}},
+			{CoveragePointID: "project-aide", Area: interview.FocusProjects, Label: "Aide 项目", Priority: 80, QuestionCount: 2, LastAskedTurn: 2, EvidenceRefs: []interview.EvidenceRef{}},
 			{CoveragePointID: "jd-concurrency", Area: interview.FocusKnowledge, Label: "Go 并发与失效边界", Priority: 90, QuestionCount: 0, LastAskedTurn: 0, EvidenceRefs: []interview.EvidenceRef{}},
 		},
 		QuestionKindCounts: map[interview.QuestionKind]int{interview.QuestionProject: 2, interview.QuestionKnowledge: 0},
@@ -249,10 +249,10 @@ func TestInterviewAgentRejectsInvalidCoverageSelections(t *testing.T) {
 
 func TestInterviewAgentTimeoutDefaultsEnvironmentAndCompatibleConstructor(t *testing.T) {
 	keys := []string{
-		"OFFERPILOT_INTERVIEWER_TIMEOUT",
-		"OFFERPILOT_ASSESSOR_TIMEOUT",
-		"OFFERPILOT_REPORTER_TIMEOUT",
-		"OFFERPILOT_PLANNER_TIMEOUT",
+		"AIDE_INTERVIEWER_TIMEOUT",
+		"AIDE_ASSESSOR_TIMEOUT",
+		"AIDE_REPORTER_TIMEOUT",
+		"AIDE_PLANNER_TIMEOUT",
 	}
 	for _, key := range keys {
 		t.Setenv(key, "")
@@ -263,10 +263,10 @@ func TestInterviewAgentTimeoutDefaultsEnvironmentAndCompatibleConstructor(t *tes
 		t.Fatalf("default timeouts = %#v", defaults)
 	}
 
-	t.Setenv("OFFERPILOT_INTERVIEWER_TIMEOUT", "101s")
-	t.Setenv("OFFERPILOT_ASSESSOR_TIMEOUT", "2m30s")
-	t.Setenv("OFFERPILOT_REPORTER_TIMEOUT", "invalid")
-	t.Setenv("OFFERPILOT_PLANNER_TIMEOUT", "95000")
+	t.Setenv("AIDE_INTERVIEWER_TIMEOUT", "101s")
+	t.Setenv("AIDE_ASSESSOR_TIMEOUT", "2m30s")
+	t.Setenv("AIDE_REPORTER_TIMEOUT", "invalid")
+	t.Setenv("AIDE_PLANNER_TIMEOUT", "95000")
 	configured := InterviewAgentOptionsFromEnv()
 	if configured.InterviewerTimeout != 101*time.Second || configured.AssessorTimeout != 150*time.Second ||
 		configured.ReporterTimeout != 90*time.Second || configured.PlannerTimeout != 95*time.Second {

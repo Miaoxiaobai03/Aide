@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/executiontrace"
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/executiontrace"
+	"aide/backend/internal/interview"
 )
 
 func TestInterviewStreamReturnsTracesAndSameMappedResult(t *testing.T) {
@@ -28,10 +28,10 @@ func TestInterviewStreamReturnsTracesAndSameMappedResult(t *testing.T) {
 		Profile: interview.Profile{
 			JD: interview.JDProfile{Title: "Agent Engineer"},
 			Resume: interview.ResumeProfile{Projects: []interview.ProfilePoint{{
-				ID: "project-1", Label: "OfferPilot", EvidenceRefs: []interview.EvidenceRef{anchor},
+				ID: "project-1", Label: "Aide", EvidenceRefs: []interview.EvidenceRef{anchor},
 			}}},
 			Coverage: []interview.CoveragePoint{{
-				ID: "coverage-1", Area: interview.FocusProjects, Label: "OfferPilot",
+				ID: "coverage-1", Area: interview.FocusProjects, Label: "Aide",
 				EvidenceRefs: []interview.EvidenceRef{anchor},
 			}},
 		},

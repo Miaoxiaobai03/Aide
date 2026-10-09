@@ -18,8 +18,8 @@ WORKDIR /app/web
 
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV OFFERPILOT_PROJECT_ROOT=/app
-ENV OFFERPILOT_CONFIG_PATH=/app/config/.env
+ENV AIDE_PROJECT_ROOT=/app
+ENV AIDE_CONFIG_PATH=/app/config/.env
 
 COPY --chown=node:node --from=deps /app/web/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/web/.next ./.next

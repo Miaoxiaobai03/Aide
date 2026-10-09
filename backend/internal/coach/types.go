@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"time"
 
-	"offerpilot/backend/internal/chat"
+	"aide/backend/internal/chat"
 )
 
 const DocumentKind = "coach-conversation-v1"

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3001';
-const HEALTH_TIMEOUT_MS = readPositiveIntEnv('OFFERPILOT_HEALTH_TIMEOUT_MS', 3000);
+const HEALTH_TIMEOUT_MS = readPositiveIntEnv('AIDE_HEALTH_TIMEOUT_MS', 3000);
 
 export const dynamic = 'force-dynamic';
 

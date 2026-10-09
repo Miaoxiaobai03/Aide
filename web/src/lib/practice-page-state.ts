@@ -13,8 +13,8 @@ export function validatePracticeEvent(event:Record<string,unknown>,practiceId:st
 
 // Delete only this practice's local state; another practice/free chat is retained.
 export function clearPracticeStorage(storage:Storage,practiceId:string){
- const prefix='offerpilot.practice.'+practiceId+'.';const keys:string[]=[];
+ const prefix='aide.practice.'+practiceId+'.';const keys:string[]=[];
  for(let i=0;i<storage.length;i++){const key=storage.key(i);if(key?.startsWith(prefix))keys.push(key)}
  for(const key of keys)storage.removeItem(key);
- if(storage.getItem('offerpilot.coach.active')===practiceId)storage.removeItem('offerpilot.coach.active');
+ if(storage.getItem('aide.coach.active')===practiceId)storage.removeItem('aide.coach.active');
 }

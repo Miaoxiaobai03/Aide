@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 const (

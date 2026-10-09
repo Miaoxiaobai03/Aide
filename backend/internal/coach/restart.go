@@ -2,7 +2,7 @@ package coach
 
 import (
 	"context"
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 	"time"
 )
 

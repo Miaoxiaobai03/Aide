@@ -2,7 +2,7 @@ package coach
 
 import (
 	"context"
-	"offerpilot/backend/internal/chat"
+	"aide/backend/internal/chat"
 	"testing"
 )
 

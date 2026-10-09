@@ -33,12 +33,12 @@ func TestParseEnvLine(t *testing.T) {
 
 func TestLoadDotEnvUsesConfiguredPathAndPreservesNonEmptyEnvironment(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "runtime.env")
-	if err := os.WriteFile(path, []byte("OFFERPILOT_TEST_FILE_VALUE=from-file\nOFFERPILOT_TEST_OVERRIDE=from-file\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("AIDE_TEST_FILE_VALUE=from-file\nAIDE_TEST_OVERRIDE=from-file\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("OFFERPILOT_CONFIG_PATH", path)
-	t.Setenv("OFFERPILOT_TEST_FILE_VALUE", "")
-	t.Setenv("OFFERPILOT_TEST_OVERRIDE", "from-process")
+	t.Setenv("AIDE_CONFIG_PATH", path)
+	t.Setenv("AIDE_TEST_FILE_VALUE", "")
+	t.Setenv("AIDE_TEST_OVERRIDE", "from-process")
 
 	loaded, err := LoadDotEnv()
 	if err != nil {
@@ -47,16 +47,16 @@ func TestLoadDotEnvUsesConfiguredPathAndPreservesNonEmptyEnvironment(t *testing.
 	if loaded != path {
 		t.Fatalf("loaded path = %q, want %q", loaded, path)
 	}
-	if got := os.Getenv("OFFERPILOT_TEST_FILE_VALUE"); got != "from-file" {
+	if got := os.Getenv("AIDE_TEST_FILE_VALUE"); got != "from-file" {
 		t.Fatalf("file value = %q, want from-file", got)
 	}
-	if got := os.Getenv("OFFERPILOT_TEST_OVERRIDE"); got != "from-process" {
+	if got := os.Getenv("AIDE_TEST_OVERRIDE"); got != "from-process" {
 		t.Fatalf("override = %q, want from-process", got)
 	}
 }
 
 func TestLoadDotEnvIgnoresMissingConfiguredPath(t *testing.T) {
-	t.Setenv("OFFERPILOT_CONFIG_PATH", filepath.Join(t.TempDir(), "missing.env"))
+	t.Setenv("AIDE_CONFIG_PATH", filepath.Join(t.TempDir(), "missing.env"))
 	loaded, err := LoadDotEnv()
 	if err != nil {
 		t.Fatal(err)

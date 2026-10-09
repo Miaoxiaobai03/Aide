@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	typedprofile "offerpilot/backend/internal/profile"
+	typedprofile "aide/backend/internal/profile"
 )
 
 type typedProfileBuilder struct {

@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody, readPositiveIntEnv } from '@/lib/api-security';
 
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3001';
-const API_KEY = process.env.OFFERPILOT_API_KEY;
+const API_KEY = process.env.AIDE_API_KEY;
 const HEARTBEAT_INTERVAL = 15000;
-const USE_MOCK = process.env.OFFERPILOT_USE_MOCK === 'true';
-const MAX_MESSAGE_CHARS = readPositiveIntEnv('OFFERPILOT_MAX_MESSAGE_CHARS', 20000);
+const USE_MOCK = process.env.AIDE_USE_MOCK === 'true';
+const MAX_MESSAGE_CHARS = readPositiveIntEnv('AIDE_MAX_MESSAGE_CHARS', 20000);
 
 export async function POST(req: NextRequest) {
   let body: { message?: string; sessionId?: string; model?: string };

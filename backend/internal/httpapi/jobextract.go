@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"offerpilot/backend/internal/jobextract"
+	"aide/backend/internal/jobextract"
 )
 
 const maxJDImageBytes = 8 << 20

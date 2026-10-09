@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"offerpilot/backend/internal/chat"
+	"aide/backend/internal/chat"
 )
 
 func chatFingerprint(c Conversation, submission string) string {

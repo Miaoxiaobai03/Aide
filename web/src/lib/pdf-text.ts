@@ -93,7 +93,7 @@ function assetDirectory(name: string): string {
 }
 
 function resolvePDFJSRoot(): string {
-  const projectRoot = process.env.OFFERPILOT_PROJECT_ROOT;
+  const projectRoot = process.env.AIDE_PROJECT_ROOT;
   const candidates = [
     join(process.cwd(), 'node_modules/pdfjs-dist'),
     join(process.cwd(), 'web/node_modules/pdfjs-dist'),

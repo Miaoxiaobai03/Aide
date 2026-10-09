@@ -10,11 +10,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/coach"
-	"offerpilot/backend/internal/httpapi"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/coach"
+	"aide/backend/internal/httpapi"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/knowledge"
 )
 
 func TestGradingActualHTTPTransportAndRecovery(t *testing.T) {

@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-const defaultUserAgent = "Mozilla/5.0 (compatible; OfferPilot-WebCrawler/1.0)"
+const defaultUserAgent = "Mozilla/5.0 (compatible; Aide-WebCrawler/1.0)"
 
 type Options struct {
 	RequestTimeout       time.Duration

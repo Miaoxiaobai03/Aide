@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"offerpilot/backend/evals"
+	"aide/backend/evals"
 )
 
 func TestRunDefaultCorpus(t *testing.T) {

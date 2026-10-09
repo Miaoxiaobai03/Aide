@@ -40,7 +40,7 @@ export function ChatMessage({ message, isStreaming, isThinking }: Props) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `offerpilot-${new Date().toISOString().slice(0, 10)}.md`;
+    a.download = `aide-${new Date().toISOString().slice(0, 10)}.md`;
     document.body.appendChild(a);
     a.click();
     a.remove();

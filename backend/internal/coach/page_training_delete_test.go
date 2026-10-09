@@ -2,8 +2,8 @@ package coach
 
 import (
 	"errors"
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/interview"
 	"strings"
 	"testing"
 )

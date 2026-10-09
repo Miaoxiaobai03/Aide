@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/jobextract"
+	"aide/backend/internal/jobextract"
 )
 
 type jdExtractorStub struct {

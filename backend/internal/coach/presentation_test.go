@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/knowledge"
 )
 
 func TestReadableReferenceDisclosureAndLegacyRecovery(t *testing.T) {

@@ -201,7 +201,7 @@ func sqliteTestSession() InterviewSession {
 	startedAt := time.Date(2026, 8, 10, 12, 34, 56, 789000000, time.UTC)
 	evidence := EvidenceRef{
 		SourceID: "resume-1", Kind: SourceResume, AnchorID: "resume-1:1",
-		Locator: "segment:1", Quote: "OfferPilot adaptive interview agent",
+		Locator: "segment:1", Quote: "Aide adaptive interview agent",
 	}
 	question := Question{
 		ID: "question-1", RootID: "root-1", Text: "What did you own?",
@@ -218,23 +218,23 @@ func sqliteTestSession() InterviewSession {
 		State: StateAwaitingAnswer,
 		Profile: Profile{
 			Resume: ResumeProfile{Projects: []ProfilePoint{{
-				ID: "project-1", Label: "OfferPilot", EvidenceRefs: []EvidenceRef{evidence},
+				ID: "project-1", Label: "Aide", EvidenceRefs: []EvidenceRef{evidence},
 			}}},
 			Coverage: []CoveragePoint{{
-				ID: "coverage-1", Area: FocusProjects, Label: "OfferPilot", EvidenceRefs: []EvidenceRef{evidence},
+				ID: "coverage-1", Area: FocusProjects, Label: "Aide", EvidenceRefs: []EvidenceRef{evidence},
 			}},
 		},
 		Sources: SourceIndex{
 			Documents: map[string]SourceDocument{
 				"resume-1": {
 					ID: "resume-1", Kind: SourceResume, Name: "resume.md",
-					Content: "Built the OfferPilot adaptive interview agent.",
+					Content: "Built the Aide adaptive interview agent.",
 				},
 			},
 			Anchors: map[string]SourceAnchor{
 				"resume-1:1": {
 					ID: "resume-1:1", SourceID: "resume-1", Kind: SourceResume,
-					Locator: "segment:1", Text: "OfferPilot adaptive interview agent",
+					Locator: "segment:1", Text: "Aide adaptive interview agent",
 				},
 			},
 			Order: []string{"resume-1:1"},

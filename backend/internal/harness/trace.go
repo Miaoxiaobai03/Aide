@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"offerpilot/backend/internal/executiontrace"
+	"aide/backend/internal/executiontrace"
 )
 
 type TraceType string

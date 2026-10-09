@@ -8,7 +8,7 @@ import (
 	"io"
 	"os"
 
-	"offerpilot/backend/evals"
+	"aide/backend/evals"
 )
 
 const (
@@ -89,7 +89,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 
 func parseOptions(args []string, output io.Writer) (options, error) {
 	opts := options{}
-	flags := flag.NewFlagSet("offerpilot-eval", flag.ContinueOnError)
+	flags := flag.NewFlagSet("aide-eval", flag.ContinueOnError)
 	flags.SetOutput(output)
 	flags.StringVar(&opts.corpusPath, "corpus", "", "path to an external corpus; defaults to the embedded release corpus")
 	flags.BoolVar(&opts.pretty, "pretty", true, "indent JSON output")

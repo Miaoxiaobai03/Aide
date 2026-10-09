@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"math"
-	"offerpilot/backend/internal/chat"
+	"aide/backend/internal/chat"
 	"os"
 	"path/filepath"
 	"sort"

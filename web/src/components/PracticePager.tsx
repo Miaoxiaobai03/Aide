@@ -36,7 +36,7 @@ export function PracticePager({practiceId,model,onExit,onState,onPractice}:{prac
  const positions=useRef<Record<string,number>>({});
  const infoRef=useRef<PracticeInfo|null>(null);
  const backendReady=useRef(false);
- const prefix='offerpilot.practice.'+practiceId+'.';
+ const prefix='aide.practice.'+practiceId+'.';
  function read(key:string){try{return localStorage.getItem(prefix+key)}catch{return null}}
  function write(key:string,value:string){try{localStorage.setItem(prefix+key,value);return true}catch{return false}}
  function forget(key:string){try{localStorage.removeItem(prefix+key)}catch{}}
@@ -77,7 +77,7 @@ export function PracticePager({practiceId,model,onExit,onState,onPractice}:{prac
  useEffect(()=>{
   live.current=true;
   let qid=read('page')??'';
-  try{const url=new URL(window.location.href);if(url.searchParams.get('practiceId')===practiceId)qid=url.searchParams.get('questionId')??qid;localStorage.setItem('offerpilot.coach.active',practiceId)}catch{}
+  try{const url=new URL(window.location.href);if(url.searchParams.get('practiceId')===practiceId)qid=url.searchParams.get('questionId')??qid;localStorage.setItem('aide.coach.active',practiceId)}catch{}
   void openPage(qid);
   return()=>{live.current=false;navSeq.current++;controller.current?.abort();audioController.current?.abort()};
  },[practiceId]);
@@ -93,7 +93,7 @@ export function PracticePager({practiceId,model,onExit,onState,onPractice}:{prac
  },[info,active,operation]);
  useEffect(()=>{
   if(typeof BroadcastChannel==='undefined')return;
-  const channel=new BroadcastChannel('offerpilot.coach.events');
+  const channel=new BroadcastChannel('aide.coach.events');
   channel.onmessage=event=>{if(event.data?.type==='deleted'&&event.data.id===practiceId){invalidatePractice()}};
   return()=>channel.close();
  },[practiceId]);
@@ -116,7 +116,7 @@ export function PracticePager({practiceId,model,onExit,onState,onPractice}:{prac
   try{const url=new URL(window.location.href);url.searchParams.delete('practiceId');url.searchParams.delete('questionId');window.history.replaceState(null,'',url)}catch{}
  }
  function leave(){
-  try{localStorage.removeItem('offerpilot.coach.active');const url=new URL(window.location.href);url.searchParams.delete('practiceId');url.searchParams.delete('questionId');window.history.replaceState(null,'',url)}catch{}
+  try{localStorage.removeItem('aide.coach.active');const url=new URL(window.location.href);url.searchParams.delete('practiceId');url.searchParams.delete('questionId');window.history.replaceState(null,'',url)}catch{}
   onExit();
  }
  function setError(qid:string,text:string){setErrors(p=>({...p,[qid]:text}))}
@@ -199,7 +199,7 @@ export function PracticePager({practiceId,model,onExit,onState,onPractice}:{prac
   try{
    await coachRequest({}, {action:'deletepages',id:practiceId,version:info.version});
    invalidatePractice();
-   if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('offerpilot.coach.events');channel.postMessage({type:'deleted',id:practiceId});channel.close()}
+   if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('aide.coach.events');channel.postMessage({type:'deleted',id:practiceId});channel.close()}
 
   }catch(e){if(live.current){setNavError((e as Error).message);setDeleting(false)}}
  }

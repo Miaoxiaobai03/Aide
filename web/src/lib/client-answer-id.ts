@@ -1,4 +1,4 @@
-export const CLIENT_ANSWER_STORAGE_KEY = 'offerpilot.interview.client-answer.v1';
+export const CLIENT_ANSWER_STORAGE_KEY = 'aide.interview.client-answer.v1';
 
 export interface ClientAnswerDescriptor {
   interviewId: string;

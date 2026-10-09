@@ -33,7 +33,7 @@ upstream.listen(0, '127.0.0.1'); await once(upstream, 'listening');
 const reservation = createServer(); reservation.listen(0, '127.0.0.1'); await once(reservation, 'listening'); const port = reservation.address().port; await new Promise(r => reservation.close(r));
 const child = spawn(process.execPath, [resolve('node_modules/next/dist/bin/next'), 'start', '-p', String(port)], {
   cwd: process.cwd(), windowsHide: true,
-  env: { ...process.env, BACKEND_URL: `http://127.0.0.1:${upstream.address().port}`, OFFERPILOT_API_KEY: fixtureKey },
+  env: { ...process.env, BACKEND_URL: `http://127.0.0.1:${upstream.address().port}`, AIDE_API_KEY: fixtureKey },
   stdio: ['ignore', 'pipe', 'pipe'],
 });
 let serverOutput = ''; child.stdout.on('data', c => { serverOutput += c; }); child.stderr.on('data', c => { serverOutput += c; });

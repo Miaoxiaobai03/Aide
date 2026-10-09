@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"offerpilot/backend/internal/chat"
+	"aide/backend/internal/chat"
 	"strings"
 	"testing"
 	"time"

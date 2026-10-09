@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 type recoveryInterviewStub struct {
@@ -42,7 +42,7 @@ func TestInterviewRecoveryHandlersMapSnapshotAndEventCursor(t *testing.T) {
 	service := &recoveryInterviewStub{
 		snapshot: interview.SessionSnapshot{
 			State:           interview.StateAwaitingAnswer,
-			Profile:         interview.Profile{Coverage: []interview.CoveragePoint{{ID: "coverage-1", Area: interview.FocusProjects, Label: "OfferPilot"}}},
+			Profile:         interview.Profile{Coverage: []interview.CoveragePoint{{ID: "coverage-1", Area: interview.FocusProjects, Label: "Aide"}}},
 			CurrentQuestion: &interview.Question{ID: "question-2", Text: "下一题", CoveragePointID: "coverage-1"},
 			Turns: []interview.SnapshotTurn{{
 				Question: interview.Question{ID: "question-1", Text: "第一题", CoveragePointID: "coverage-1"},

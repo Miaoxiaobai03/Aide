@@ -16,9 +16,9 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/knowledge"
 )
 
 type fixedCase struct {
@@ -194,7 +194,7 @@ func TestFrozenProductContracts(t *testing.T) {
 	if cases != 39 {
 		t.Fatalf("expected sealed 39 contract cases, got %d", cases)
 	}
-	if target := os.Getenv("OFFERPILOT_CONTRACT_REPORT"); target != "" {
+	if target := os.Getenv("AIDE_CONTRACT_REPORT"); target != "" {
 		b, _ := json.MarshalIndent(map[string]any{"cases": cases, "results": results, "realModelQuality": false}, "", "  ")
 		if e = os.WriteFile(target, append(b, '\n'), 0600); e != nil {
 			t.Fatal(e)

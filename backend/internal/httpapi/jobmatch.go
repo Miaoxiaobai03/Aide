@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"offerpilot/backend/internal/jobmatch"
+	"aide/backend/internal/jobmatch"
 )
 
 func (s *Server) handleMatch(response http.ResponseWriter, request *http.Request) {

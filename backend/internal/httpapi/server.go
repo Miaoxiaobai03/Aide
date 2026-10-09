@@ -18,17 +18,17 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/coach"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/jobmatch"
-	"offerpilot/backend/internal/resumediagnosis"
-	"offerpilot/backend/internal/session"
-	"offerpilot/backend/internal/speech"
-	"offerpilot/backend/internal/webcrawler"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/coach"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/jobmatch"
+	"aide/backend/internal/resumediagnosis"
+	"aide/backend/internal/session"
+	"aide/backend/internal/speech"
+	"aide/backend/internal/webcrawler"
 )
 
-const chatSystemPrompt = `你是 OfferPilot，一名严谨的 AI Agent / LLM 工程面试教练。基于用户实际提供的问题和材料作答；区分事实、候选人陈述与推断，不编造简历经历。诊断回答时关注原理、个人职责、量化口径、方案取舍和边界条件，并给出可执行改进。`
+const chatSystemPrompt = `你是 Aide，一名严谨的 AI Agent / LLM 工程面试教练。基于用户实际提供的问题和材料作答；区分事实、候选人陈述与推断，不编造简历经历。诊断回答时关注原理、个人职责、量化口径、方案取舍和边界条件，并给出可执行改进。`
 
 type InterviewService interface {
 	Start(context.Context, interview.StartRequest) (interview.StartResponse, error)
@@ -115,7 +115,7 @@ type Server struct {
 func New(config Config, dependencies Dependencies) (*Server, error) {
 	config = withDefaults(config)
 	if config.RequireAuth && strings.TrimSpace(config.APIKey) == "" {
-		return nil, errors.New("httpapi: OFFERPILOT_API_KEY is required when authentication is enabled")
+		return nil, errors.New("httpapi: AIDE_API_KEY is required when authentication is enabled")
 	}
 	if dependencies.Interview == nil {
 		return nil, errors.New("httpapi: interview service is required")
@@ -331,7 +331,7 @@ func (s *Server) healthPayload(status string) map[string]any {
 	}
 	return map[string]any{
 		"status":                        status,
-		"service":                       "offerpilot-go",
+		"service":                       "aide-go",
 		"version":                       s.config.Version,
 		"live":                          true,
 		"ready":                         s.config.ModelConfigured,

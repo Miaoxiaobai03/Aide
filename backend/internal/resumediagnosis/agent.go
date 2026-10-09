@@ -9,8 +9,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"offerpilot/backend/internal/harness"
-	"offerpilot/backend/internal/llm"
+	"aide/backend/internal/harness"
+	"aide/backend/internal/llm"
 )
 
 const (
@@ -30,7 +30,7 @@ var defaultAgent = harness.Agent{
 	ID:          AgentID,
 	Description: "Diagnoses resume content and visual layout with evidence-grounded section analysis",
 	Timeout:     defaultTimeout,
-	SystemPrompt: `你是 OfferPilot 的多模态简历诊断 Agent。输入包含 PDF 提取文字，并可能包含最多三张按页渲染的简历图片。
+	SystemPrompt: `你是 Aide 的多模态简历诊断 Agent。输入包含 PDF 提取文字，并可能包含最多三张按页渲染的简历图片。
 
 职责边界：
 - 文字是经历、数字和技术事实的唯一依据；图片用于判断版式层级、信息密度、对齐、留白、分页、字体大小和视觉可读性。

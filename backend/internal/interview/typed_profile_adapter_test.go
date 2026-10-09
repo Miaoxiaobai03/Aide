@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	typedprofile "offerpilot/backend/internal/profile"
+	typedprofile "aide/backend/internal/profile"
 )
 
 func TestExtractTypedProfileBuildsCanonicalProfileSourcesAndCoverage(t *testing.T) {
@@ -18,7 +18,7 @@ func TestExtractTypedProfileBuildsCanonicalProfileSourcesAndCoverage(t *testing.
 - 负责高并发服务架构设计与交付`},
 		Resume: &MaterialInput{Name: "resume.md", Text: `后端工程师
 项目经历
-OfferPilot | 2025-2026
+Aide | 2025-2026
 - 主导 Go Agent Harness 设计与上线
 - 将 P95 延迟从 800ms 降低至 220ms，支持 10k QPS
 技能
@@ -54,7 +54,7 @@ Go、SQLite、OpenTelemetry`},
 	expectedLabels := []string{
 		"5 年以上 Go 经验，必须熟悉 Redis",
 		"负责高并发服务架构设计与交付",
-		"OfferPilot",
+		"Aide",
 		"将 P95 延迟从 800ms 降低至 220ms，支持 10k QPS",
 	}
 	for _, label := range expectedLabels {

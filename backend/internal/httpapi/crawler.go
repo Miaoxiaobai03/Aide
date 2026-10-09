@@ -7,7 +7,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"offerpilot/backend/internal/webcrawler"
+	"aide/backend/internal/webcrawler"
 )
 
 func (s *Server) handleCrawl(response http.ResponseWriter, request *http.Request) {

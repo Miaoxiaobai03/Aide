@@ -7,7 +7,7 @@ import { createServer } from 'node:net';
 import { resolve } from 'node:path';
 import { writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
-const binary=process.argv[2];if(!binary)throw new Error('Pass the compiled offerpilot-coach-check executable');
+const binary=process.argv[2];if(!binary)throw new Error('Pass the compiled aide-coach-check executable');
 const go=spawn(resolve(binary),[],{windowsHide:true,stdio:['ignore','pipe','pipe']});
 let logs='',readyLine='';go.stderr.on('data',v=>logs+=v);go.stdout.on('data',v=>readyLine+=v);
 let next;const checks=[];
@@ -15,7 +15,7 @@ try {
   for(let i=0;i<100&&!readyLine.includes('\n');i++){if(go.exitCode!==null)break;await delay(50)}
   const info=JSON.parse(readyLine.split('\n')[0]);assert.equal(info.fixture,true);assert.equal(info.gradingVersion,'knowledge-evidence-v2','Rebuild the local fixture binary before this smoke test');
   const reservation=createServer();reservation.listen(0,'127.0.0.1');await once(reservation,'listening');const port=reservation.address().port;await new Promise(r=>reservation.close(r));
-  next=spawn(process.execPath,[resolve('node_modules/next/dist/bin/next'),'start','-p',String(port)],{windowsHide:true,env:{...process.env,BACKEND_URL:info.url,OFFERPILOT_API_KEY:'fixture-only-key',OFFERPILOT_USE_MOCK:'false'},stdio:['ignore','pipe','pipe']});
+  next=spawn(process.execPath,[resolve('node_modules/next/dist/bin/next'),'start','-p',String(port)],{windowsHide:true,env:{...process.env,BACKEND_URL:info.url,AIDE_API_KEY:'fixture-only-key',AIDE_USE_MOCK:'false'},stdio:['ignore','pipe','pipe']});
   next.stdout.on('data',v=>logs+=v);next.stderr.on('data',v=>logs+=v);
   const base=`http://127.0.0.1:${port}`;
   let online=false;for(let i=0;i<100;i++){try{if((await fetch(base)).ok){online=true;break}}catch{};if(next.exitCode!==null)break;await delay(100)}assert.ok(online,'Next failed to start');

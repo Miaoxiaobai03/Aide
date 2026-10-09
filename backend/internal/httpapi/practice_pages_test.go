@@ -11,9 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/coach"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/coach"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/knowledge"
 )
 
 // Exercise page contracts and data boundaries, not merely endpoint availability.

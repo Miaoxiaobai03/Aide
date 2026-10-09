@@ -5,7 +5,7 @@ import type {
   InterviewSnapshot,
 } from '@/types/interview';
 
-export const INTERVIEW_EVENT_CURSOR_KEY_PREFIX = 'offerpilot.interview.event-cursor.v1';
+export const INTERVIEW_EVENT_CURSOR_KEY_PREFIX = 'aide.interview.event-cursor.v1';
 
 export interface InterviewRecoveryStorage {
   getItem(key: string): string | null;

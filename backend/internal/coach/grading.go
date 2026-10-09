@@ -8,8 +8,8 @@ import (
 	"strings"
 	"unicode"
 
-	"offerpilot/backend/internal/gradecheck"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/gradecheck"
+	"aide/backend/internal/knowledge"
 )
 
 const GradingVersion = "knowledge-evidence-v2"

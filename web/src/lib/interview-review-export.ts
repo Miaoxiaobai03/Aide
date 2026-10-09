@@ -59,7 +59,7 @@ export function downloadInterviewReview(html: string, interviewId: string): void
   const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = `offerpilot-review-${safeFilename(interviewId)}-${new Date().toISOString().slice(0, 10)}.html`;
+  anchor.download = `aide-review-${safeFilename(interviewId)}-${new Date().toISOString().slice(0, 10)}.html`;
   anchor.click();
   URL.revokeObjectURL(url);
 }

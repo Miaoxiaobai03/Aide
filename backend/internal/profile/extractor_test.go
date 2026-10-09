@@ -20,7 +20,7 @@ func TestDeterministicExtractorBuildsGroundedChineseProfile(t *testing.T) {
 - 负责交易平台架构设计、核心服务交付与稳定性治理`},
 		Resume: DocumentInput{SourceID: "resume-v3", Text: `张三｜后端工程师
 项目经历
-### OfferPilot | 2025.01-2026.06
+### Aide | 2025.01-2026.06
 - 主导 Go Agent Harness 与 SQLite 状态层设计，负责服务上线
 - 将 P95 延迟从 800ms 降低至 220ms，支持 10k QPS
 - 使用 Go、Redis、Docker 和 Kubernetes
@@ -52,7 +52,7 @@ Go、TypeScript、PostgreSQL、OpenTelemetry`},
 	if !hasFactValue(first.Job.TechnicalTopics, "Go") || !hasFactValue(first.Job.TechnicalTopics, "Kubernetes") {
 		t.Fatalf("technical topics = %+v", first.Job.TechnicalTopics)
 	}
-	if len(first.Candidate.Projects) != 1 || first.Candidate.Projects[0].Name.Value != "OfferPilot" {
+	if len(first.Candidate.Projects) != 1 || first.Candidate.Projects[0].Name.Value != "Aide" {
 		t.Fatalf("projects = %+v", first.Candidate.Projects)
 	}
 	project := first.Candidate.Projects[0]
@@ -133,19 +133,19 @@ func TestDeterministicExtractorHandlesInlineSectionsWithoutSubstringSkills(t *te
 
 func TestDeterministicExtractorSplitsInlineProjectNameAndResponsibility(t *testing.T) {
 	result, err := NewDeterministicExtractor().Extract(context.Background(), Input{
-		Resume: DocumentInput{Text: "项目 OfferPilot：我负责 Go Agent Harness 的架构设计与实现。"},
+		Resume: DocumentInput{Text: "项目 Aide：我负责 Go Agent Harness 的架构设计与实现。"},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(result.Candidate.Projects) != 1 || result.Candidate.Projects[0].Name.Value != "OfferPilot" {
+	if len(result.Candidate.Projects) != 1 || result.Candidate.Projects[0].Name.Value != "Aide" {
 		t.Fatalf("projects = %+v", result.Candidate.Projects)
 	}
 	project := result.Candidate.Projects[0]
 	if len(project.Responsibilities) != 1 || project.Responsibilities[0].Value != "我负责 Go Agent Harness 的架构设计与实现。" {
 		t.Fatalf("inline project responsibilities = %+v", project.Responsibilities)
 	}
-	if err := Validate(mustBuildAgentRequest(t, Input{Resume: DocumentInput{Text: "项目 OfferPilot：我负责 Go Agent Harness 的架构设计与实现。"}}), result); err != nil {
+	if err := Validate(mustBuildAgentRequest(t, Input{Resume: DocumentInput{Text: "项目 Aide：我负责 Go Agent Harness 的架构设计与实现。"}}), result); err != nil {
 		t.Fatal(err)
 	}
 }

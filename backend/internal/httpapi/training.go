@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 func (s *Server) trainingService(response http.ResponseWriter) *interview.Service {

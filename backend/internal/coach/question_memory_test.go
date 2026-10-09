@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/interview"
 )
 
 func tenQuestionFixture(t *testing.T) (*Service, *fixtureModel, Conversation, string) {

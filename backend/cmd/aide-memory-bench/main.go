@@ -17,12 +17,12 @@ import (
 	"strings"
 	"time"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/coach"
-	"offerpilot/backend/internal/config"
-	"offerpilot/backend/internal/httpapi"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/coach"
+	"aide/backend/internal/config"
+	"aide/backend/internal/httpapi"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/knowledge"
 )
 
 type source struct {
@@ -207,7 +207,7 @@ func run(in input) (result, error) {
 	if e != nil {
 		return out, e
 	}
-	file, e := os.CreateTemp("", "offerpilot-s1-bench-*.db")
+	file, e := os.CreateTemp("", "aide-s1-bench-*.db")
 	if e != nil {
 		return out, e
 	}

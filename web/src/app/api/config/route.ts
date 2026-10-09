@@ -19,11 +19,11 @@ interface ModelsConfig {
   multimodal?: ModelEntry[];
 }
 
-const PROJECT_ROOT = process.env.OFFERPILOT_PROJECT_ROOT
-  ? resolve(process.env.OFFERPILOT_PROJECT_ROOT)
+const PROJECT_ROOT = process.env.AIDE_PROJECT_ROOT
+  ? resolve(process.env.AIDE_PROJECT_ROOT)
   : resolve(process.cwd(), '..');
-const ENV_PATH = process.env.OFFERPILOT_CONFIG_PATH
-  ? resolve(process.env.OFFERPILOT_CONFIG_PATH)
+const ENV_PATH = process.env.AIDE_CONFIG_PATH
+  ? resolve(process.env.AIDE_CONFIG_PATH)
   : resolve(PROJECT_ROOT, '.env');
 const MODELS_YML_PATH = resolve(PROJECT_ROOT, 'models.yml');
 const MASK_PREFIX = '********';
@@ -72,7 +72,7 @@ function isMaskedSecretValue(key: string, value: string): boolean {
 }
 
 function configWriteEnabled(): boolean {
-  return process.env.NODE_ENV !== 'production' || process.env.OFFERPILOT_ENABLE_CONFIG_API === 'true';
+  return process.env.NODE_ENV !== 'production' || process.env.AIDE_ENABLE_CONFIG_API === 'true';
 }
 
 function collectConfigKeys(config: ModelsConfig): Set<string> {

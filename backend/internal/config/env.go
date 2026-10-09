@@ -9,11 +9,11 @@ import (
 	"strings"
 )
 
-// LoadDotEnv loads OFFERPILOT_CONFIG_PATH when configured, otherwise the first
+// LoadDotEnv loads AIDE_CONFIG_PATH when configured, otherwise the first
 // .env file found in the working directory or one of its parents. Non-empty
 // process environment variables always win.
 func LoadDotEnv() (string, error) {
-	if configured := strings.TrimSpace(os.Getenv("OFFERPILOT_CONFIG_PATH")); configured != "" {
+	if configured := strings.TrimSpace(os.Getenv("AIDE_CONFIG_PATH")); configured != "" {
 		path, err := filepath.Abs(configured)
 		if err != nil {
 			return "", fmt.Errorf("config: resolve %s: %w", configured, err)

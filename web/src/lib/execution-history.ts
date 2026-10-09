@@ -6,7 +6,7 @@ import type {
   InterviewExecutionTransition,
 } from '@/types/interview';
 
-export const EXECUTION_HISTORY_KEY_PREFIX = 'offerpilot.interview.execution-runs.v1';
+export const EXECUTION_HISTORY_KEY_PREFIX = 'aide.interview.execution-runs.v1';
 export const MAX_EXECUTION_HISTORY_BYTES = 256 * 1024;
 export const MAX_EXECUTION_HISTORY_RUNS = 64;
 export const MAX_EXECUTION_STEPS_PER_RUN = 64;

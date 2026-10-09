@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/knowledge"
 )
 
 type Service struct {

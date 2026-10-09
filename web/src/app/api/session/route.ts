@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'node:crypto';
 
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3001';
-const API_KEY = process.env.OFFERPILOT_API_KEY;
-const USE_MOCK = process.env.OFFERPILOT_USE_MOCK === 'true';
+const API_KEY = process.env.AIDE_API_KEY;
+const USE_MOCK = process.env.AIDE_USE_MOCK === 'true';
 
 export async function POST(req: NextRequest) {
   if (USE_MOCK) {

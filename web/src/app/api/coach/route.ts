@@ -5,7 +5,7 @@ import { readJsonBody } from '@/lib/api-security';
 async function forward(req: NextRequest, body?: unknown) {
   try {
     const response = await fetch(`${process.env.BACKEND_URL ?? 'http://localhost:3001'}/api/v1/coach${req.nextUrl.search}`, {
-      method: req.method, headers: { 'Content-Type': 'application/json', ...(process.env.OFFERPILOT_API_KEY ? { Authorization: `Bearer ${process.env.OFFERPILOT_API_KEY}` } : {}) },
+      method: req.method, headers: { 'Content-Type': 'application/json', ...(process.env.AIDE_API_KEY ? { Authorization: `Bearer ${process.env.AIDE_API_KEY}` } : {}) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: req.signal, cache: 'no-store',
     });
     return new Response(await response.text(), { status: response.status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });

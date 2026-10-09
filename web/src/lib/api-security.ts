@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const MAX_JSON_BODY_BYTES = readPositiveIntEnv('OFFERPILOT_MAX_JSON_BODY_BYTES', 256 * 1024);
-export const MAX_INTERVIEW_BODY_BYTES = readPositiveIntEnv('OFFERPILOT_MAX_INTERVIEW_BODY_BYTES', 2 * 1024 * 1024);
-export const MAX_AUDIO_BODY_BYTES = readPositiveIntEnv('OFFERPILOT_MAX_AUDIO_BODY_BYTES', 25 * 1024 * 1024);
-export const MAX_UPLOAD_BODY_BYTES = readPositiveIntEnv('OFFERPILOT_MAX_UPLOAD_BODY_BYTES', 10 * 1024 * 1024);
-export const MAX_RESUME_DIAGNOSIS_BODY_BYTES = readPositiveIntEnv('OFFERPILOT_MAX_RESUME_DIAGNOSIS_BODY_BYTES', 12 * 1024 * 1024);
-export const MAX_URL_RESPONSE_BYTES = readPositiveIntEnv('OFFERPILOT_MAX_URL_RESPONSE_BYTES', 1024 * 1024);
+export const MAX_JSON_BODY_BYTES = readPositiveIntEnv('AIDE_MAX_JSON_BODY_BYTES', 256 * 1024);
+export const MAX_INTERVIEW_BODY_BYTES = readPositiveIntEnv('AIDE_MAX_INTERVIEW_BODY_BYTES', 2 * 1024 * 1024);
+export const MAX_AUDIO_BODY_BYTES = readPositiveIntEnv('AIDE_MAX_AUDIO_BODY_BYTES', 25 * 1024 * 1024);
+export const MAX_UPLOAD_BODY_BYTES = readPositiveIntEnv('AIDE_MAX_UPLOAD_BODY_BYTES', 10 * 1024 * 1024);
+export const MAX_RESUME_DIAGNOSIS_BODY_BYTES = readPositiveIntEnv('AIDE_MAX_RESUME_DIAGNOSIS_BODY_BYTES', 12 * 1024 * 1024);
+export const MAX_URL_RESPONSE_BYTES = readPositiveIntEnv('AIDE_MAX_URL_RESPONSE_BYTES', 1024 * 1024);
 
 export type BodyResult<T> =
   | { data: T; response?: never }

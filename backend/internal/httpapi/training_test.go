@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 type workflowTrainingAgent struct{}

@@ -59,12 +59,12 @@ export function CoachChat({ model, resetKey, openId, onState }: { model: string;
   function accept(c: CoachConversation) {
     setConversation(c);
     onState?.(c.id, c.plan ? new Set(c.plan.attempts.filter(a => a.status === 'succeeded').map(a => a.ordinal)).size : c.messages.filter(m => m.role === 'user').length);
-    try { localStorage.setItem('offerpilot.coach.active', c.id); } catch {}
+    try { localStorage.setItem('aide.coach.active', c.id); } catch {}
   }
   function clearMissingRecord(id:string) {
     try {
-      if(localStorage.getItem('offerpilot.coach.active')===id)localStorage.removeItem('offerpilot.coach.active');
-      const prefix='offerpilot.practice.'+id+'.';
+      if(localStorage.getItem('aide.coach.active')===id)localStorage.removeItem('aide.coach.active');
+      const prefix='aide.practice.'+id+'.';
       const keys:string[]=[];
       for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key?.startsWith(prefix))keys.push(key)}
       keys.forEach(key=>localStorage.removeItem(key));
@@ -92,8 +92,8 @@ export function CoachChat({ model, resetKey, openId, onState }: { model: string;
   useEffect(() => {
     let mounted = true;
 		void requireCurrentBackend().catch(()=>{});
-    void (async () => { try { const result = await coachRequest<{ items: CoachListing[] }>({ resource: 'list' }); if (!mounted) return; setList(result.items); let key = openId; try { key ||= new URL(window.location.href).searchParams.get('practiceId') ?? undefined; key ||= localStorage.getItem('offerpilot.coach.active') ?? undefined; } catch {} if (key && result.items.some(c => c.id === key)) await open(key); else if(key) clearMissingRecord(key);
- else if(key){try{localStorage.removeItem('offerpilot.coach.active')}catch{}} } catch (e) { if (mounted) setError((e as Error).message); } })();
+    void (async () => { try { const result = await coachRequest<{ items: CoachListing[] }>({ resource: 'list' }); if (!mounted) return; setList(result.items); let key = openId; try { key ||= new URL(window.location.href).searchParams.get('practiceId') ?? undefined; key ||= localStorage.getItem('aide.coach.active') ?? undefined; } catch {} if (key && result.items.some(c => c.id === key)) await open(key); else if(key) clearMissingRecord(key);
+ else if(key){try{localStorage.removeItem('aide.coach.active')}catch{}} } catch (e) { if (mounted) setError((e as Error).message); } })();
     return () => { mounted = false; requestSeq.current++; controller.current?.abort();audioController.current?.abort(); };
   }, []);
   useEffect(() => { if (openId && conversation?.id !== openId) void open(openId); }, [openId]);
@@ -105,7 +105,7 @@ export function CoachChat({ model, resetKey, openId, onState }: { model: string;
     // Cross-tab deletion notifications carry only an ID and leave no persisted
     // tombstone or transcript. A stale tab must also drop its working context.
     if(typeof BroadcastChannel==='undefined')return;
-    const channel=new BroadcastChannel('offerpilot.coach.events');
+    const channel=new BroadcastChannel('aide.coach.events');
     channel.onmessage=event=>{
       if(event.data?.type!=='deleted')return;
       setList(items=>items.filter(item=>item.id!==event.data.id));
@@ -126,13 +126,13 @@ export function CoachChat({ model, resetKey, openId, onState }: { model: string;
       setReference(''); setFragment(null); setCorrects(''); setReanswer(false); await refreshList();
 			if(action==='learn'){setCollapsedAnswers(prev=>({...prev,[(conversation?.plan?.current??0)+1]:false}));setPracticeInputMode('answer');}
 			if(['next','finish'].includes(action))setCollapsedAnswers(prev=>({...prev,[(conversation?.plan?.current??0)+1]:true}));
-			if(action==='practice'){try{localStorage.removeItem('offerpilot.coach.creation')}catch{}}
+			if(action==='practice'){try{localStorage.removeItem('aide.coach.creation')}catch{}}
 			if(['practice','next','finish','retest','focus'].includes(action)){setDraft('');restorePending.current=null;}
     } catch (e) { if(seq===requestSeq.current)setError((e as Error).message); } finally { if(seq===requestSeq.current){setBusy(false); busyRef.current = false;controller.current=null;} }
   }
   async function startPractice() {
     if (!/^\d+$/.test(count) || Number(count) < 1 || Number(count) > 100) { setError('请输入1—100的整数题数'); return; }
-    const pendingKey='offerpilot.coach.creation';let submissionId=crypto.randomUUID();try{const old=JSON.parse(localStorage.getItem(pendingKey)??'null');if(old?.count===Number(count))submissionId=old.submissionId;localStorage.setItem(pendingKey,JSON.stringify({count:Number(count),submissionId}));}catch{}
+    const pendingKey='aide.coach.creation';let submissionId=crypto.randomUUID();try{const old=JSON.parse(localStorage.getItem(pendingKey)??'null');if(old?.count===Number(count))submissionId=old.submissionId;localStorage.setItem(pendingKey,JSON.stringify({count:Number(count),submissionId}));}catch{}
     await mutate('practice', { count: Number(count),submissionId });
   }
   const plan = conversation?.plan;
@@ -225,8 +225,8 @@ export function CoachChat({ model, resetKey, openId, onState }: { model: string;
         catch(e){if(attempt===2||!(e instanceof CoachRequestError)||e.code!=='conflict')throw e;}
       }
       if(seq!==requestSeq.current)return;
-      if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('offerpilot.coach.events');channel.postMessage({type:'deleted',id:key});channel.close();}
-      setConversation(null);onState?.('',0);setDraft('');setPartial('');setThinking('');setReference('');setFragment(null);setCorrects('');setReanswer(false);setCollapsedAnswers({});restorePending.current=null;setDeleteDialog(false);setError('');try{localStorage.removeItem('offerpilot.coach.active')}catch{};await refreshList();
+      if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('aide.coach.events');channel.postMessage({type:'deleted',id:key});channel.close();}
+      setConversation(null);onState?.('',0);setDraft('');setPartial('');setThinking('');setReference('');setFragment(null);setCorrects('');setReanswer(false);setCollapsedAnswers({});restorePending.current=null;setDeleteDialog(false);setError('');try{localStorage.removeItem('aide.coach.active')}catch{};await refreshList();
     } catch(e){if(seq===requestSeq.current)setError((e as Error).message)}finally{deleteInFlight.current=false;if(seq===requestSeq.current){setBusy(false);busyRef.current=false;}}
   }
   async function editMessage(messageId:string, current:string, deleted=false) {
@@ -250,7 +250,7 @@ export function CoachChat({ model, resetKey, openId, onState }: { model: string;
 		{deleteDialog&&<div role="dialog" aria-label="删除整轮练习" className="m-5 rounded-xl border bg-white p-4"><p>删除本场全部题目、对话、作答、评分、摘要和索引；能力统计同步移除本场结果。已独立创建的其他复测保留，但不再链接到本场。</p><div className="mt-3 flex flex-wrap gap-4"><button onClick={()=>remove(true)}>删除整轮练习及全部数据</button><button onClick={()=>setDeleteDialog(false)}>取消</button></div></div>}
     <div className="flex-1 overflow-y-auto px-5 py-5" onWheel={e=>{if(e.deltaY<0)autoScroll.current=false;}} onScroll={e=>{const el=e.currentTarget;if(el.scrollHeight-el.scrollTop-el.clientHeight<80)autoScroll.current=true;}}>
       <div className="mx-auto max-w-3xl space-y-5">
-        {!conversation?.messages.length && <div className="py-16 text-center"><img src="/brand/offerpilot-icon-192.png" alt="Aide" className="mx-auto mb-6 h-20 w-20 rounded-2xl" /><h1 className="text-2xl font-bold">面试诊断 Agent</h1><p className="mt-3 text-slate-500">自由提问并检索知识资料，或开始八股练习。<br />默认10题，作答后反馈，可追问再进入下一题。</p><button disabled={busy} onClick={startPractice} className="mt-6 rounded-xl bg-accent px-5 py-3 text-white">进入八股练习</button></div>}
+        {!conversation?.messages.length && <div className="py-16 text-center"><img src="/brand/aide-icon-192.png" alt="Aide" className="mx-auto mb-6 h-20 w-20 rounded-2xl" /><h1 className="text-2xl font-bold">面试诊断 Agent</h1><p className="mt-3 text-slate-500">自由提问并检索知识资料，或开始八股练习。<br />默认10题，作答后反馈，可追问再进入下一题。</p><button disabled={busy} onClick={startPractice} className="mt-6 rounded-xl bg-accent px-5 py-3 text-white">进入八股练习</button></div>}
         {plan && conversation && <nav aria-label="练习题目回看" className="flex flex-wrap gap-2 rounded-xl border bg-white p-3 text-sm">{conversation.questionGroups?.map(group=><button key={group.questionId} disabled={busy} aria-pressed={group.ordinal===ordinal} className={group.ordinal===ordinal?'rounded bg-sky-100 px-3 py-2':'rounded border px-3 py-2'} title={`${group.title} · ${group.viewedAnswer?'已看答案，待加强':group.state}`} onClick={()=>mutate('focus',{questionId:group.questionId})}>第{group.ordinal}题{group.viewedAnswer?' · 待加强':''}</button>)}{reviewing&&<button disabled={busy} onClick={()=>mutate('focus',{questionId:plan.questions[plan.current].id})}>返回当前第{progressOrdinal}题</button>}</nav>}
         {plan && conversation && <div className="sticky top-0 z-10 rounded-xl border bg-white/95 p-3 text-sm"><p>{reviewing?`回看第${ordinal}题 · 当前进度第${progressOrdinal}题`:`第${ordinal}/${plan.questions.length}题`} · 有效评分{new Set(plan?.attempts.filter(a=>a.status==='succeeded').map(a=>a.ordinal)).size}题{plan?.status==='completed'?' · 本场已结束':' · 追问不消耗题数'}{viewedAnswer&&' · 本题已看答案，待加强'}</p>{!conversation.deleted && !reviewing && plan?.status!=='completed' && <div className="mt-2 flex flex-wrap gap-3">{viewedAnswer && <><button disabled={busy} onClick={returnToAnswer}>收起题解，自己作答</button><button disabled={busy} onClick={()=>{setCollapsedAnswers(prev=>({...prev,[ordinal]:false}));setPracticeInputMode('followup');setReanswer(false);}}>查看题解／追问</button></>}{!reviewing&&(ready||viewedAnswer)&&<button disabled={busy} className="rounded bg-accent px-3 py-2 text-white" onClick={()=>mutate(ordinal===plan.questions.length?'finish':'next')}>{ordinal===plan.questions.length?'结束并查看总结':'下一题'}</button>}{viewedAnswer&&!ready&&<span className="text-xs text-amber-700">直接下一题会保留待加强标记，不记作答成绩</span>}</div>}</div>}
         {conversation?.messages.filter(message=>(!plan||message.ordinal===ordinal||message.questionId===plan.questions[ordinal-1]?.id)&&!(message.role==='assistant'&&message.status!=='complete'&&!message.content.trim())).map(message=><article key={message.id} className="space-y-2">

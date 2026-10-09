@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/webcrawler"
+	"aide/backend/internal/webcrawler"
 )
 
 type crawlerStub struct {

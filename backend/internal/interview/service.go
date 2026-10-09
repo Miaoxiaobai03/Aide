@@ -12,7 +12,7 @@ import (
 	"sync"
 	"unicode"
 
-	"offerpilot/backend/internal/executiontrace"
+	"aide/backend/internal/executiontrace"
 )
 
 const maxKnowledgeEvidencePerQuestion = 5

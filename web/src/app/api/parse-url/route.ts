@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readJsonBody } from '@/lib/api-security';
 
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3001';
-const API_KEY = process.env.OFFERPILOT_API_KEY;
+const API_KEY = process.env.AIDE_API_KEY;
 
 export async function POST(req: NextRequest) {
   const parsed = await readJsonBody<{ url?: string }>(req);

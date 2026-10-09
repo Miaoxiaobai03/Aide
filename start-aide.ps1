@@ -60,9 +60,9 @@ function Load-Configuration {
         throw 'OPENAI_API_KEY 尚未配置。Go 后端使用这个变量连接 DeepSeek；单独填写 DEEPSEEK_API_KEY 不会生效。'
     }
     $env:PORT = [string]$ApiPort
-    $env:OFFERPILOT_ALLOWED_ORIGINS = $webUrl
+    $env:AIDE_ALLOWED_ORIGINS = $webUrl
     $env:BACKEND_URL = $apiUrl
-    $env:OFFERPILOT_PROJECT_ROOT = $repo
+    $env:AIDE_PROJECT_ROOT = $repo
     Write-Host "模型：$env:OPENAI_MODEL @ $env:OPENAI_BASE_URL"
 }
 
@@ -149,7 +149,7 @@ function Start-All {
     New-Item -ItemType Directory -Path $runtime -Force | Out-Null
     Push-Location (Join-Path $repo 'backend')
     try {
-        & $tools.Go build -o $apiExe ./cmd/offerpilot-api
+        & $tools.Go build -o $apiExe ./cmd/aide-api
         if ($LASTEXITCODE -ne 0) { throw 'Go API 编译失败。' }
     } finally { Pop-Location }
 

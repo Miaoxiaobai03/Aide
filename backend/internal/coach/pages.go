@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 type pageRepository interface {

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/jobmatch"
+	"aide/backend/internal/jobmatch"
 )
 
 type matcherStub struct {

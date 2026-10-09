@@ -11,7 +11,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"offerpilot/backend/internal/harness"
+	"aide/backend/internal/harness"
 )
 
 const (
@@ -112,7 +112,7 @@ func NewAgentWithOptions(runtime *harness.Runtime, fetcher ContentFetcher, optio
 			Description: "Crawls public job pages through provider fast paths and a bounded Function Tool fallback loop",
 			Tools:       toolNames,
 			Timeout:     options.DecisionTimeout,
-			SystemPrompt: `你是 OfferPilot 的网页爬虫 Agent。只有在确定性 Provider、JSON-LD 和静态正文提取均失败后才会调用你。
+			SystemPrompt: `你是 Aide 的网页爬虫 Agent。只有在确定性 Provider、JSON-LD 和静态正文提取均失败后才会调用你。
 
 你必须基于 observations 选择下一步：
 1. call_tool：选择 inspect_web_page、scan_web_scripts 或 GET-only 的 fetch_web_resource，并给出 URL。页面是 SPA 壳且脚本较多时优先用一次 scan_web_scripts；已有明确 API 时直接 fetch_web_resource，避免逐个脚本消耗 token。
@@ -445,7 +445,7 @@ func hostAllowed(target *url.URL, allowed map[string]struct{}) bool {
 
 func matchesAnyAPITemplate(target *url.URL, templates []string) bool {
 	for _, template := range templates {
-		placeholder := "OFFERPILOT_ID_PLACEHOLDER"
+		placeholder := "AIDE_ID_PLACEHOLDER"
 		parsed, err := url.Parse(strings.ReplaceAll(template, "{id}", placeholder))
 		if err != nil || !strings.EqualFold(parsed.Scheme, target.Scheme) || !strings.EqualFold(parsed.Hostname(), target.Hostname()) {
 			continue

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 type interviewRecoveryService interface {

@@ -28,7 +28,7 @@ func TestStartBuildsGroundedProfilesAfterQuestionRepair(t *testing.T) {
 		{
 			name:      "resume project anchor",
 			focus:     FocusProjects,
-			materials: MaterialsInput{Resume: &MaterialInput{Text: "后端工程师\n项目 OfferPilot：我负责设计自适应面试 Agent\n将响应延迟从 500ms 降至 120ms"}},
+			materials: MaterialsInput{Resume: &MaterialInput{Text: "后端工程师\n项目 Aide：我负责设计自适应面试 Agent\n将响应延迟从 500ms 降至 120ms"}},
 			wantKind:  SourceResume,
 		},
 	}
@@ -1140,7 +1140,7 @@ func startRequest(questionCount int, focus Focus, materials MaterialsInput) Star
 func standardMaterials() MaterialsInput {
 	return MaterialsInput{
 		JD:     &MaterialInput{Text: "高级 Go 工程师\n负责设计高并发支付平台\n要求理解 Go 并发、Redis 和 Kafka"},
-		Resume: &MaterialInput{Text: "后端工程师\n项目 OfferPilot：我负责设计自适应面试 Agent\n将响应延迟从 500ms 降至 120ms\n负责消息队列削峰与故障恢复"},
+		Resume: &MaterialInput{Text: "后端工程师\n项目 Aide：我负责设计自适应面试 Agent\n将响应延迟从 500ms 降至 120ms\n负责消息队列削峰与故障恢复"},
 	}
 }
 

@@ -22,8 +22,8 @@ describe('practice page response ownership',()=>{
 });
 
 it('deletion clears every question draft and marker while retaining other practices and free chat',()=>{
- const data=new Map([['offerpilot.practice.p.draft.q1','a'],['offerpilot.practice.p.draft.q10','b'],['offerpilot.practice.p.page','q10'],['offerpilot.practice.p.pending.q3','partial'],['offerpilot.practice.p2.draft.q1','keep'],['offerpilot.coach.active','p'],['free-chat','keep']]);
+ const data=new Map([['aide.practice.p.draft.q1','a'],['aide.practice.p.draft.q10','b'],['aide.practice.p.page','q10'],['aide.practice.p.pending.q3','partial'],['aide.practice.p2.draft.q1','keep'],['aide.coach.active','p'],['free-chat','keep']]);
  const storage={get length(){return data.size},key:i=>[...data.keys()][i]??null,getItem:key=>data.get(key)??null,removeItem:key=>data.delete(key)};
- clearPracticeStorage(storage,'p');assert.deepEqual([...data.keys()],['offerpilot.practice.p2.draft.q1','free-chat']);clearPracticeStorage(storage,'p');assert.equal(data.size,2);
- data.set('offerpilot.coach.active','p2');clearPracticeStorage(storage,'p');assert.equal(data.get('offerpilot.coach.active'),'p2');
+ clearPracticeStorage(storage,'p');assert.deepEqual([...data.keys()],['aide.practice.p2.draft.q1','free-chat']);clearPracticeStorage(storage,'p');assert.equal(data.size,2);
+ data.set('aide.coach.active','p2');clearPracticeStorage(storage,'p');assert.equal(data.get('aide.coach.active'),'p2');
 });

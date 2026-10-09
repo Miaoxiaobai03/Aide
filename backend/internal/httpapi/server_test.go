@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/speech"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/speech"
 )
 
 type interviewStub struct {
@@ -61,7 +61,7 @@ func TestHealthExposesRuntimeReadinessWithoutAuthentication(t *testing.T) {
 	if err := json.Unmarshal(response.Body.Bytes(), &payload); err != nil {
 		t.Fatal(err)
 	}
-	if payload["service"] != "offerpilot-go" || payload["version"] != "0.2.0" || payload["knowledgeEntries"] != float64(403) || payload["harness"] != "ready" || payload["readiness"] != "ready" || payload["live"] != true || payload["ready"] != true {
+	if payload["service"] != "aide-go" || payload["version"] != "0.2.0" || payload["knowledgeEntries"] != float64(403) || payload["harness"] != "ready" || payload["readiness"] != "ready" || payload["live"] != true || payload["ready"] != true {
 		t.Fatalf("unexpected health payload: %#v", payload)
 	}
 	readiness := httptest.NewRecorder()

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/harness"
-	"offerpilot/backend/internal/llm"
+	"aide/backend/internal/harness"
+	"aide/backend/internal/llm"
 )
 
 type noopStructuredClient struct{}

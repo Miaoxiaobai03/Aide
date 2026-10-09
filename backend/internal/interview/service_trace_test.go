@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/executiontrace"
+	"aide/backend/internal/executiontrace"
 )
 
 func TestServiceEmitsSafeExecutionStagesAcrossInterviewLifecycle(t *testing.T) {

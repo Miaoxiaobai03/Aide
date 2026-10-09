@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"offerpilot/backend/internal/harness"
-	"offerpilot/backend/internal/llm"
+	"aide/backend/internal/harness"
+	"aide/backend/internal/llm"
 )
 
 const AgentID = "jd_transcriber"

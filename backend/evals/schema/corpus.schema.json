@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://offerpilot.local/schemas/eval-corpus-v1.json",
-  "title": "OfferPilot offline interview evaluation corpus",
+  "$id": "https://aide.local/schemas/eval-corpus-v1.json",
+  "title": "Aide offline interview evaluation corpus",
   "type": "object",
   "additionalProperties": false,
   "required": [

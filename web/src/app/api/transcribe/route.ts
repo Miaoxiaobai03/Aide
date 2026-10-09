@@ -3,7 +3,7 @@ import { readArrayBufferBody } from '@/lib/api-security';
 import { normalizeTranscribeError, transcribeUnavailableError } from '@/lib/transcribe-error';
 
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3001';
-const API_KEY = process.env.OFFERPILOT_API_KEY;
+const API_KEY = process.env.AIDE_API_KEY;
 
 export async function POST(req: NextRequest) {
   const parsed = await readArrayBufferBody(req, undefined, 'audio body');

@@ -15,13 +15,13 @@ export function TrainingHistoryView({ onResumeInterview, onOpenPractice }: { onR
   const [kind, setKind] = useState('');
   const [plan, setPlan] = useState<RetestPlan | null>(null);
   const requests = useRef(0);
-  function acceptPlan(value: RetestPlan) { setPlan(value); setDetail(null); try { localStorage.setItem('offerpilot.retest.active', value.id); } catch {} }
+  function acceptPlan(value: RetestPlan) { setPlan(value); setDetail(null); try { localStorage.setItem('aide.retest.active', value.id); } catch {} }
   async function load(cursor = '') { const seq = ++requests.current; setBusy(true); setError(''); try { const result = await trainingRequest<HistoryPage>({ resource: 'history', cursor, state, area, kind }); if (seq === requests.current) setPage(prev => cursor && prev ? { ...result, items: [...prev.items, ...result.items] } : result); } catch (e) { if (seq === requests.current) setError((e as Error).message); } finally { if (seq === requests.current) setBusy(false); } }
   useEffect(() => { void load(); }, [state, area, kind]);
-  async function open(id: string) { const seq = ++requests.current; setBusy(true); setError(''); try { const value = await trainingRequest<HistoryDetail>({ resource: 'detail', id }); if (seq === requests.current) { setDetail(value); setPlan(null); try { localStorage.removeItem('offerpilot.retest.active'); } catch {} } } catch (e) { if (seq === requests.current) setError((e as Error).message); } finally { if (seq === requests.current) setBusy(false); } }
+  async function open(id: string) { const seq = ++requests.current; setBusy(true); setError(''); try { const value = await trainingRequest<HistoryDetail>({ resource: 'detail', id }); if (seq === requests.current) { setDetail(value); setPlan(null); try { localStorage.removeItem('aide.retest.active'); } catch {} } } catch (e) { if (seq === requests.current) setError((e as Error).message); } finally { if (seq === requests.current) setBusy(false); } }
   async function openPlan(id: string) { const seq = ++requests.current; setBusy(true); setError(''); try { const value = await trainingRequest<RetestPlan>({ resource: 'plan', id }); if (seq === requests.current) acceptPlan(value); } catch (e) { if (seq === requests.current) setError((e as Error).message); } finally { if (seq === requests.current) setBusy(false); } }
-  useEffect(() => { try { const id = localStorage.getItem('offerpilot.retest.active'); if (id) void openPlan(id); } catch {} }, []);
-  function back() { setPlan(null); setDetail(null); try { localStorage.removeItem('offerpilot.retest.active'); } catch {} void load(); }
+  useEffect(() => { try { const id = localStorage.getItem('aide.retest.active'); if (id) void openPlan(id); } catch {} }, []);
+  function back() { setPlan(null); setDetail(null); try { localStorage.removeItem('aide.retest.active'); } catch {} void load(); }
   async function importOld(id: string) { setBusy(true); setError(''); try { await trainingRequest({}, { action: 'import', ids: [id] }); await load(); } catch (e) { setError((e as Error).message); } finally { setBusy(false); } }
   return <div className="flex-1 overflow-y-auto p-6"><div className="mx-auto max-w-4xl space-y-4">
     <h2 className="text-lg font-semibold">训练历史与复习</h2>

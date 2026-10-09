@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/session"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/session"
 )
 
 type recordingChatClient struct {

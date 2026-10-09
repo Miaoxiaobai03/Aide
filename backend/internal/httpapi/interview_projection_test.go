@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 func TestReportDimensionsMarkUncoveredAreasUnassessed(t *testing.T) {
@@ -118,7 +118,7 @@ func TestCachedReportProjectionRedactsNarrativeWithoutDroppingRisk(t *testing.T)
 	firstKnowledge := knowledgeRef("one", "解释 late interaction", secret)
 	secondKnowledge := knowledgeRef("two", "解释 deadline 降级", crossAnchorSecret)
 	projectRef := interview.EvidenceRef{
-		SourceID: "resume", Kind: interview.SourceResume, AnchorID: "resume:project", Locator: "segment:1", Quote: "OfferPilot 项目",
+		SourceID: "resume", Kind: interview.SourceResume, AnchorID: "resume:project", Locator: "segment:1", Quote: "Aide 项目",
 	}
 	strong := func(ref interview.EvidenceRef) interview.Assessment {
 		return interview.Assessment{
@@ -143,7 +143,7 @@ func TestCachedReportProjectionRedactsNarrativeWithoutDroppingRisk(t *testing.T)
 				{ID: "jd-1", Label: "Late interaction", EvidenceRefs: []interview.EvidenceRef{firstKnowledge}},
 				{ID: "jd-2", Label: "Deadline degradation", EvidenceRefs: []interview.EvidenceRef{secondKnowledge}},
 			}},
-			Resume: interview.ResumeProfile{Projects: []interview.ProfilePoint{{ID: "project-1", Label: "OfferPilot", EvidenceRefs: []interview.EvidenceRef{projectRef}}}},
+			Resume: interview.ResumeProfile{Projects: []interview.ProfilePoint{{ID: "project-1", Label: "Aide", EvidenceRefs: []interview.EvidenceRef{projectRef}}}},
 			Coverage: []interview.CoveragePoint{
 				{ID: "knowledge-1", Area: interview.FocusKnowledge, EvidenceRefs: []interview.EvidenceRef{firstKnowledge}},
 				{ID: "knowledge-2", Area: interview.FocusKnowledge, EvidenceRefs: []interview.EvidenceRef{secondKnowledge}},

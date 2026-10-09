@@ -5,7 +5,7 @@ import { trainingRequest, type RetestPlan, type RetestTask } from '@/lib/trainin
 import { EvaluationView, TRAINING_STATUS } from './WeaknessPanel';
 
 interface Draft { text: string; id: string }
-const draftKey = (planId: string, taskId: string) => `offerpilot.retest.draft.${planId}.${taskId}`;
+const draftKey = (planId: string, taskId: string) => `aide.retest.draft.${planId}.${taskId}`;
 function readDraft(plan: RetestPlan, task: RetestTask): Draft { const existing = plan.attempts.find(a => a.taskId === task.id); if (existing) return { text: existing.answer.text, id: existing.id }; try { const value = JSON.parse(localStorage.getItem(draftKey(plan.id, task.id)) ?? 'null'); if (typeof value?.text === 'string' && typeof value?.id === 'string') return value; } catch {} return { text: '', id: `attempt-${createClientAnswerId()}` }; }
 export function RetestPanel({ plan, onPlan, onBack, onSource }: { plan: RetestPlan; onPlan: (plan: RetestPlan) => void; onBack: () => void; onSource: (id: string) => void }) {
   const [batch, setBatch] = useState(0); const [taskId, setTaskId] = useState(''); const [draft, setDraft] = useState<Draft>({ text: '', id: '' }); const [busy, setBusy] = useState(false); const [error, setError] = useState('');

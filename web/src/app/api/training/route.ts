@@ -7,7 +7,7 @@ async function forward(req: NextRequest, body?: unknown) {
   try {
     const response = await fetch(`${process.env.BACKEND_URL ?? 'http://localhost:3001'}/api/v1/training${req.nextUrl.search}`, {
       method: req.method,
-      headers: { 'Content-Type': 'application/json', ...(process.env.OFFERPILOT_API_KEY ? { Authorization: `Bearer ${process.env.OFFERPILOT_API_KEY}` } : {}) },
+      headers: { 'Content-Type': 'application/json', ...(process.env.AIDE_API_KEY ? { Authorization: `Bearer ${process.env.AIDE_API_KEY}` } : {}) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       signal: req.signal, cache: 'no-store',
     });

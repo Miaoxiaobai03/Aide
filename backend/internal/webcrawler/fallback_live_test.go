@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/config"
-	"offerpilot/backend/internal/harness"
-	"offerpilot/backend/internal/llm"
+	"aide/backend/internal/config"
+	"aide/backend/internal/harness"
+	"aide/backend/internal/llm"
 )
 
 type forcedFallbackFetcher struct {
@@ -34,8 +34,8 @@ func (client liveLoggingClient) ChatJSON(ctx context.Context, messages []llm.Mes
 }
 
 func TestLiveModelFallbackCrawlsDynamicJobPage(t *testing.T) {
-	if os.Getenv("OFFERPILOT_RUN_LIVE_CRAWLER_FALLBACK") != "1" {
-		t.Skip("set OFFERPILOT_RUN_LIVE_CRAWLER_FALLBACK=1 to run the live model/tool integration")
+	if os.Getenv("AIDE_RUN_LIVE_CRAWLER_FALLBACK") != "1" {
+		t.Skip("set AIDE_RUN_LIVE_CRAWLER_FALLBACK=1 to run the live model/tool integration")
 	}
 	if _, err := config.LoadDotEnv(); err != nil {
 		t.Fatal(err)
@@ -58,7 +58,7 @@ func TestLiveModelFallbackCrawlsDynamicJobPage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	target := os.Getenv("OFFERPILOT_LIVE_CRAWLER_URL")
+	target := os.Getenv("AIDE_LIVE_CRAWLER_URL")
 	if strings.TrimSpace(target) == "" {
 		target = "https://jobs.bytedance.com/campus/position/7628936427621927173/detail?spread=5YNTDRM"
 	}

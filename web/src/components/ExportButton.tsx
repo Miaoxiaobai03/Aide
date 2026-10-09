@@ -19,7 +19,7 @@ export function ExportButton({ messages, sessionId }: Props) {
   function exportMarkdown() {
     const md = buildMarkdown(messages, sessionId);
     const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
-    download(blob, `offerpilot-report-${dateStr()}.md`);
+    download(blob, `aide-report-${dateStr()}.md`);
     setShowMenu(false);
   }
 

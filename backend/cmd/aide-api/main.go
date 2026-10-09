@@ -15,20 +15,20 @@ import (
 	"syscall"
 	"time"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/coach"
-	"offerpilot/backend/internal/config"
-	"offerpilot/backend/internal/harness"
-	"offerpilot/backend/internal/httpapi"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/jobextract"
-	"offerpilot/backend/internal/jobmatch"
-	"offerpilot/backend/internal/knowledge"
-	"offerpilot/backend/internal/llm"
-	"offerpilot/backend/internal/resumediagnosis"
-	"offerpilot/backend/internal/session"
-	"offerpilot/backend/internal/speech"
-	"offerpilot/backend/internal/webcrawler"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/coach"
+	"aide/backend/internal/config"
+	"aide/backend/internal/harness"
+	"aide/backend/internal/httpapi"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/jobextract"
+	"aide/backend/internal/jobmatch"
+	"aide/backend/internal/knowledge"
+	"aide/backend/internal/llm"
+	"aide/backend/internal/resumediagnosis"
+	"aide/backend/internal/session"
+	"aide/backend/internal/speech"
+	"aide/backend/internal/webcrawler"
 )
 
 func main() {
@@ -45,11 +45,11 @@ func main() {
 	if err != nil {
 		fatal("load knowledge index", err)
 	}
-	retriever, err := knowledge.NewInterviewRetriever(index, intEnv("OFFERPILOT_INTERVIEW_KNOWLEDGE_LIMIT", 8))
+	retriever, err := knowledge.NewInterviewRetriever(index, intEnv("AIDE_INTERVIEW_KNOWLEDGE_LIMIT", 8))
 	if err != nil {
 		fatal("create interview retriever", err)
 	}
-	databasePath, err := resolveDataPath(envOr("DB_PATH", "data/offerpilot.db"))
+	databasePath, err := resolveDataPath(envOr("DB_PATH", "data/aide.db"))
 	if err != nil {
 		fatal("resolve interview database", err)
 	}
@@ -79,8 +79,8 @@ func main() {
 			fatal("configure text model", modelErr)
 		}
 		runtime, runtimeErr := harness.NewRuntime(modelClient, harness.Options{
-			MaxConcurrent: intEnv("OFFERPILOT_HARNESS_MAX_CONCURRENT", 4),
-			TraceCapacity: intEnv("OFFERPILOT_HARNESS_TRACE_CAPACITY", 512),
+			MaxConcurrent: intEnv("AIDE_HARNESS_MAX_CONCURRENT", 4),
+			TraceCapacity: intEnv("AIDE_HARNESS_TRACE_CAPACITY", 512),
 			TraceSink: func(event harness.TraceEvent) {
 				if event.Type == harness.TraceError {
 					logger.Warn("harness call failed", "trace_id", event.TraceID, "agent", event.AgentID, "tool", event.ToolName, "duration_ms", event.Duration.Milliseconds(), "error", event.Error)
@@ -95,26 +95,26 @@ func main() {
 			fatal("register interview agents", err)
 		}
 		crawlerAgent, err = webcrawler.NewAgentWithOptions(runtime, webcrawler.NewFetcher(webcrawler.Options{
-			RequestTimeout:       durationEnv("OFFERPILOT_CRAWLER_REQUEST_TIMEOUT", 10*time.Second),
-			MaxResponseBytes:     int64(intEnv("OFFERPILOT_CRAWLER_MAX_RESPONSE_BYTES", 2<<20)),
-			MaxRedirects:         intEnv("OFFERPILOT_CRAWLER_MAX_REDIRECTS", 3),
-			AllowBenchmarkTunnel: boolEnv("OFFERPILOT_ALLOW_TUN_FAKE_IP", !strings.EqualFold(os.Getenv("NODE_ENV"), "production")),
+			RequestTimeout:       durationEnv("AIDE_CRAWLER_REQUEST_TIMEOUT", 10*time.Second),
+			MaxResponseBytes:     int64(intEnv("AIDE_CRAWLER_MAX_RESPONSE_BYTES", 2<<20)),
+			MaxRedirects:         intEnv("AIDE_CRAWLER_MAX_REDIRECTS", 3),
+			AllowBenchmarkTunnel: boolEnv("AIDE_ALLOW_TUN_FAKE_IP", !strings.EqualFold(os.Getenv("NODE_ENV"), "production")),
 		}), webcrawler.AgentOptions{
-			MaxFallbackIterations: intEnv("OFFERPILOT_CRAWLER_FALLBACK_MAX_ITERATIONS", 4),
-			FallbackTimeout:       durationEnv("OFFERPILOT_CRAWLER_FALLBACK_TIMEOUT", 90*time.Second),
-			DecisionTimeout:       durationEnv("OFFERPILOT_CRAWLER_DECISION_TIMEOUT", 60*time.Second),
+			MaxFallbackIterations: intEnv("AIDE_CRAWLER_FALLBACK_MAX_ITERATIONS", 4),
+			FallbackTimeout:       durationEnv("AIDE_CRAWLER_FALLBACK_TIMEOUT", 90*time.Second),
+			DecisionTimeout:       durationEnv("AIDE_CRAWLER_DECISION_TIMEOUT", 60*time.Second),
 		})
 		if err != nil {
 			fatal("register web crawler agent", err)
 		}
 		matcherAgent, err = jobmatch.NewAgent(runtime, jobmatch.AgentOptions{
-			Timeout: durationEnv("OFFERPILOT_MATCHER_TIMEOUT", 90*time.Second),
+			Timeout: durationEnv("AIDE_MATCHER_TIMEOUT", 90*time.Second),
 		})
 		if err != nil {
 			fatal("register resume matcher agent", err)
 		}
 		resumeDiagnosticianAgent, err = resumediagnosis.NewAgent(runtime, resumediagnosis.AgentOptions{
-			Timeout: durationEnv("OFFERPILOT_RESUME_DIAGNOSTICIAN_TIMEOUT", 120*time.Second),
+			Timeout: durationEnv("AIDE_RESUME_DIAGNOSTICIAN_TIMEOUT", 120*time.Second),
 		})
 		if err != nil {
 			fatal("register resume diagnostician agent", err)
@@ -126,7 +126,7 @@ func main() {
 			fatal("configure vision model", visionErr)
 		}
 		visionRuntime, visionErr := harness.NewRuntime(visionClient, harness.Options{
-			MaxConcurrent: intEnv("OFFERPILOT_HARNESS_MAX_CONCURRENT", 4),
+			MaxConcurrent: intEnv("AIDE_HARNESS_MAX_CONCURRENT", 4),
 		})
 		if visionErr != nil {
 			fatal("create vision runtime", visionErr)
@@ -141,7 +141,7 @@ func main() {
 			Model:            envOr("OPENAI_MODEL", "gpt-5.5"),
 			Timeout:          durationEnv("OPENAI_CHAT_TIMEOUT", 90*time.Second),
 			MaxTokens:        intEnv("OPENAI_MAX_TOKENS", 4096),
-			SummaryMaxTokens: intEnv("OFFERPILOT_SUMMARY_MAX_TOKENS", 8192), SummaryTimeout: durationEnv("OFFERPILOT_PAGE_SUMMARY_TIMEOUT", 45*time.Second), DisableSummaryThinking: ptrBool(boolEnv("OFFERPILOT_SUMMARY_DISABLE_THINKING", true)),
+			SummaryMaxTokens: intEnv("AIDE_SUMMARY_MAX_TOKENS", 8192), SummaryTimeout: durationEnv("AIDE_PAGE_SUMMARY_TIMEOUT", 45*time.Second), DisableSummaryThinking: ptrBool(boolEnv("AIDE_SUMMARY_DISABLE_THINKING", true)),
 		}, nil)
 		if err != nil {
 			fatal("configure chat model", err)
@@ -172,15 +172,15 @@ func main() {
 		Retriever: retriever,
 		Store:     interviewStore,
 	})
-	authRequired := strings.EqualFold(os.Getenv("NODE_ENV"), "production") || boolEnv("OFFERPILOT_REQUIRE_AUTH", false)
+	authRequired := strings.EqualFold(os.Getenv("NODE_ENV"), "production") || boolEnv("AIDE_REQUIRE_AUTH", false)
 	contextModel := envOr("OPENAI_MODEL", "gpt-5.5")
 	windows := map[string]int{}
-	if window := intEnv("OFFERPILOT_CONTEXT_WINDOW", 0); window > 0 {
+	if window := intEnv("AIDE_CONTEXT_WINDOW", 0); window > 0 {
 		windows[contextModel] = window
 	}
 	coachService := coach.New(interviewStore, chatClient, index, coach.ContextConfig{
-		SummaryThinkingMode: fmt.Sprint(boolEnv("OFFERPILOT_SUMMARY_DISABLE_THINKING", true)), DefaultModel: contextModel, InputCap: intEnv("OFFERPILOT_CONTEXT_INPUT_CAP", 30000), OutputReserve: intEnv("OPENAI_MAX_TOKENS", 4096), Safety: intEnv("OFFERPILOT_CONTEXT_SAFETY", 1024), Windows: windows,
-		DisableSummaries: boolEnv("OFFERPILOT_DISABLE_CONTEXT_SUMMARIES", false), SummaryTimeout: durationEnv("OFFERPILOT_SUMMARY_TIMEOUT", 20*time.Second), PageSummaryTimeout: durationEnv("OFFERPILOT_PAGE_SUMMARY_TIMEOUT", 45*time.Second), SummaryOutputReserve: intEnv("OFFERPILOT_SUMMARY_MAX_TOKENS", 8192),
+		SummaryThinkingMode: fmt.Sprint(boolEnv("AIDE_SUMMARY_DISABLE_THINKING", true)), DefaultModel: contextModel, InputCap: intEnv("AIDE_CONTEXT_INPUT_CAP", 30000), OutputReserve: intEnv("OPENAI_MAX_TOKENS", 4096), Safety: intEnv("AIDE_CONTEXT_SAFETY", 1024), Windows: windows,
+		DisableSummaries: boolEnv("AIDE_DISABLE_CONTEXT_SUMMARIES", false), SummaryTimeout: durationEnv("AIDE_SUMMARY_TIMEOUT", 20*time.Second), PageSummaryTimeout: durationEnv("AIDE_PAGE_SUMMARY_TIMEOUT", 45*time.Second), SummaryOutputReserve: intEnv("AIDE_SUMMARY_MAX_TOKENS", 8192),
 	})
 	if recovered, err := coachService.RecoverAfterRestart(context.Background()); err != nil {
 		fatal("recover interrupted practice operations", err)
@@ -189,17 +189,17 @@ func main() {
 	}
 	api, err := httpapi.New(httpapi.Config{
 		Version:                 config.Version,
-		APIKey:                  os.Getenv("OFFERPILOT_API_KEY"),
+		APIKey:                  os.Getenv("AIDE_API_KEY"),
 		RequireAuth:             authRequired,
-		AllowedOrigins:          csvEnv("OFFERPILOT_ALLOWED_ORIGINS", []string{"http://localhost:3000", "http://127.0.0.1:3000"}),
-		MaxJSONBodyBytes:        int64(intEnv("OFFERPILOT_MAX_JSON_BODY_BYTES", 256<<10)),
-		MaxInterviewBytes:       int64(intEnv("OFFERPILOT_MAX_INTERVIEW_BODY_BYTES", 2<<20)),
-		MaxAudioBodyBytes:       int64(intEnv("OFFERPILOT_MAX_AUDIO_BODY_BYTES", 25<<20)),
-		MaxResumeDiagnosisBytes: int64(intEnv("OFFERPILOT_MAX_RESUME_DIAGNOSIS_BODY_BYTES", 12<<20)),
-		MaxJDImageBodyBytes:     int64(intEnv("OFFERPILOT_MAX_JD_IMAGE_BODY_BYTES", 11<<20)),
-		MaxMessageChars:         intEnv("OFFERPILOT_MAX_MESSAGE_CHARS", 20000),
-		MaxTTSTextChars:         intEnv("OFFERPILOT_MAX_TTS_TEXT_CHARS", 5000),
-		MaxURLChars:             intEnv("OFFERPILOT_MAX_URL_CHARS", 4096),
+		AllowedOrigins:          csvEnv("AIDE_ALLOWED_ORIGINS", []string{"http://localhost:3000", "http://127.0.0.1:3000"}),
+		MaxJSONBodyBytes:        int64(intEnv("AIDE_MAX_JSON_BODY_BYTES", 256<<10)),
+		MaxInterviewBytes:       int64(intEnv("AIDE_MAX_INTERVIEW_BODY_BYTES", 2<<20)),
+		MaxAudioBodyBytes:       int64(intEnv("AIDE_MAX_AUDIO_BODY_BYTES", 25<<20)),
+		MaxResumeDiagnosisBytes: int64(intEnv("AIDE_MAX_RESUME_DIAGNOSIS_BODY_BYTES", 12<<20)),
+		MaxJDImageBodyBytes:     int64(intEnv("AIDE_MAX_JD_IMAGE_BODY_BYTES", 11<<20)),
+		MaxMessageChars:         intEnv("AIDE_MAX_MESSAGE_CHARS", 20000),
+		MaxTTSTextChars:         intEnv("AIDE_MAX_TTS_TEXT_CHARS", 5000),
+		MaxURLChars:             intEnv("AIDE_MAX_URL_CHARS", 4096),
 		KnowledgeEntries:        index.Len(),
 		ModelConfigured:         modelConfigured,
 		SpeechConfigured:        speechConfigured,
@@ -221,11 +221,11 @@ func main() {
 	}
 
 	port := intEnv("PORT", 3001)
-	bind := envOr("OFFERPILOT_API_BIND", "127.0.0.1")
+	bind := envOr("AIDE_API_BIND", "127.0.0.1")
 	server := api.HTTPServer(net.JoinHostPort(bind, strconv.Itoa(port)))
 	errChannel := make(chan error, 1)
 	go func() {
-		logger.Info("OfferPilot Go API started",
+		logger.Info("Aide Go API started",
 			"version", config.Version,
 			"port", port,
 			"knowledge_entries", index.Len(),

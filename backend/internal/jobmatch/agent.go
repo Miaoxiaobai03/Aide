@@ -9,7 +9,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"offerpilot/backend/internal/harness"
+	"aide/backend/internal/harness"
 )
 
 const (
@@ -29,7 +29,7 @@ var defaultAgent = harness.Agent{
 	ID:          AgentID,
 	Description: "Semantically matches a candidate resume against a job description with evidence-weighted scoring",
 	Timeout:     defaultTimeout,
-	SystemPrompt: `你是 OfferPilot 的简历-JD 语义匹配 Agent。你必须理解职责、硬性要求、候选人经历和可迁移能力，禁止做关键词交集或字符串包含匹配。
+	SystemPrompt: `你是 Aide 的简历-JD 语义匹配 Agent。你必须理解职责、硬性要求、候选人经历和可迁移能力，禁止做关键词交集或字符串包含匹配。
 
 评分规则（总分必须等于四项之和）：
 1. mustHave：0-45，学历/毕业时间/专业/明确技术门槛等硬性要求。

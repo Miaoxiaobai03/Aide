@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 	"os"
 )
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Fprintln(os.Stderr, "usage: offerpilot-practice-reset <database path>")
+		fmt.Fprintln(os.Stderr, "usage: aide-practice-reset <database path>")
 		os.Exit(2)
 	}
 	store, err := interview.OpenSQLiteStore(os.Args[1])

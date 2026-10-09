@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 func TestLoadParsesEveryQuestionBlock(t *testing.T) {

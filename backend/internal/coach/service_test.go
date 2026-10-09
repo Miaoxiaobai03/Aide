@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/knowledge"
 )
 
 type fixtureModel struct {

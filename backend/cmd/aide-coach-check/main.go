@@ -15,11 +15,11 @@ import (
 	"strings"
 	"time"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/coach"
-	"offerpilot/backend/internal/httpapi"
-	"offerpilot/backend/internal/interview"
-	"offerpilot/backend/internal/knowledge"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/coach"
+	"aide/backend/internal/httpapi"
+	"aide/backend/internal/interview"
+	"aide/backend/internal/knowledge"
 )
 
 type fixture struct{}
@@ -61,7 +61,7 @@ func (fixture) Stream(ctx context.Context, _ string, m []chat.Message, delta fun
 	return u, delta(chat.Delta{Text: text})
 }
 func main() {
-	temp, e := os.MkdirTemp("", "offerpilot-coach-check-")
+	temp, e := os.MkdirTemp("", "aide-coach-check-")
 	if e != nil {
 		panic(e)
 	}

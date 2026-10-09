@@ -204,7 +204,7 @@ func TestPrivacyContractDeferredAnswerResponseOmitsAssessment(t *testing.T) {
 			Focus: FocusProjects, Difficulty: DifficultyMedium, QuestionCount: 1,
 			Language: "zh-CN", FeedbackMode: FeedbackDeferred,
 		},
-		Materials: MaterialsInput{Resume: &MaterialInput{Text: "项目 OfferPilot：我负责面试服务的架构设计与实现。"}},
+		Materials: MaterialsInput{Resume: &MaterialInput{Text: "项目 Aide：我负责面试服务的架构设计与实现。"}},
 	})
 	if err != nil {
 		t.Fatalf("Start() error = %v", err)
@@ -256,7 +256,7 @@ func TestScoreReportNormalizesEachTurnBeforeAggregation(t *testing.T) {
 func contractSession(t *testing.T, secret string) (InterviewSession, EvidenceRef, EvidenceRef) {
 	t.Helper()
 	profile, sources := buildProfile(
-		MaterialsInput{Resume: &MaterialInput{Text: "项目 OfferPilot：负责领域服务和持久化边界。"}},
+		MaterialsInput{Resume: &MaterialInput{Text: "项目 Aide：负责领域服务和持久化边界。"}},
 		[]KnowledgeDocument{{
 			ID: "kb-contract", Title: "Contract privacy",
 			Content: "知识主题：隐私边界\n问题：如何隔离模型上下文？\n参考内容：" + secret + "\n参考答案：" + secret + "\n来源：contract.md",

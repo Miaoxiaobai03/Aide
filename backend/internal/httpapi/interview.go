@@ -12,8 +12,8 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"offerpilot/backend/internal/executiontrace"
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/executiontrace"
+	"aide/backend/internal/interview"
 )
 
 type webEvidenceRef struct {

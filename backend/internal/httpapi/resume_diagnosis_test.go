@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"offerpilot/backend/internal/resumediagnosis"
+	"aide/backend/internal/resumediagnosis"
 )
 
 type resumeDiagnosticianStub struct {

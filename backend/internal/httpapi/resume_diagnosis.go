@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"offerpilot/backend/internal/resumediagnosis"
+	"aide/backend/internal/resumediagnosis"
 )
 
 const (

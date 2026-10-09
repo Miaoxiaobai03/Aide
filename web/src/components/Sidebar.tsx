@@ -71,7 +71,7 @@ export function Sidebar({ activeView, onViewChange, model, onModelChange, onOpen
       <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-100">
         <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white shadow-card ring-1 ring-slate-100">
           <img
-            src="/brand/offerpilot-icon-192.png"
+            src="/brand/aide-icon-192.png"
             alt="Aide"
             className="h-full w-full object-cover"
           />

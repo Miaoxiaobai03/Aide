@@ -1,4 +1,4 @@
-# OfferPilot 离线 Eval Harness
+# Aide 离线 Eval Harness
 
 `backend/evals` 是独立于生产面试服务的确定性质量门禁。它读取固定、脱敏、合成的
 面试输出，不加载模型配置、不调用 provider，也不修改面试会话或 SQLite 数据。
@@ -14,10 +14,10 @@ v0.3.0-alpha.1 默认语料包含 30 个案例和 90 道题，完整覆盖：
 在 `backend` 目录执行：
 
 ```bash
-go run ./cmd/offerpilot-eval
-go run ./cmd/offerpilot-eval -pretty=false
-go run ./cmd/offerpilot-eval -corpus ./evals/corpus/v0.3.0-alpha.1.json
-go run ./cmd/offerpilot-eval -schema
+go run ./cmd/aide-eval
+go run ./cmd/aide-eval -pretty=false
+go run ./cmd/aide-eval -corpus ./evals/corpus/v0.3.0-alpha.1.json
+go run ./cmd/aide-eval -schema
 ```
 
 命令只向标准输出写 JSON report。退出码含义：
@@ -60,7 +60,7 @@ go run ./cmd/offerpilot-eval -schema
 
 1. 使用合成或可靠脱敏材料，不能提交真实 JD、简历、回答或参考答案。
 2. 升级 `corpusVersion`，保留旧版本文件以便比较发布结果。
-3. 运行 `go test ./evals ./cmd/offerpilot-eval -count=1`。
+3. 运行 `go test ./evals ./cmd/aide-eval -count=1`。
 4. 运行默认 CLI，并把 JSON 指标归档到候选版本验证记录。
 
 ## 能力边界

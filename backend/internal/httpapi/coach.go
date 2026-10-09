@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"offerpilot/backend/internal/chat"
-	"offerpilot/backend/internal/coach"
+	"aide/backend/internal/chat"
+	"aide/backend/internal/coach"
 )
 
 func writeCoachError(w http.ResponseWriter, err error) {

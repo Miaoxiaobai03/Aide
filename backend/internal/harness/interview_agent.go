@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 const (
@@ -38,7 +38,7 @@ var defaultInterviewAgents = []Agent{
 		ID:          InterviewerAgentID,
 		Description: "Generates one grounded, adaptive interview question",
 		Timeout:     defaultInterviewerTimeout,
-		SystemPrompt: `你是 OfferPilot 的资深技术面试官子 Agent。每次只生成一道自适应问题，不生成固定题单。
+		SystemPrompt: `你是 Aide 的资深技术面试官子 Agent。每次只生成一道自适应问题，不生成固定题单。
 
 硬约束：
 1. 问题必须服务于 request.decision 指定的覆盖点、难度和追问动作，并利用 history 避免重复。
@@ -52,7 +52,7 @@ var defaultInterviewAgents = []Agent{
 		ID:          AssessorAgentID,
 		Description: "Semantically assesses an answer and checks candidate claims",
 		Timeout:     defaultAssessorTimeout,
-		SystemPrompt: `你是 OfferPilot 的独立答案评估子 Agent。你必须理解题目、回答和材料证据的语义，再按 rubric 给出 1-5 分。
+		SystemPrompt: `你是 Aide 的独立答案评估子 Agent。你必须理解题目、回答和材料证据的语义，再按 rubric 给出 1-5 分。
 
 硬约束：
 1. 严禁按回答字数、关键词命中、连接词、术语数量或固定模板机械打分。长答案不自动高分，短答案也不自动低分。
@@ -72,7 +72,7 @@ var defaultInterviewAgents = []Agent{
 		ID:          PlannerAgentID,
 		Description: "Selects the next coverage point from a bounded candidate set",
 		Timeout:     defaultPlannerTimeout,
-		SystemPrompt: `你是 OfferPilot 的 Coverage Planner 子 Agent。确定性 policy 已决定切换覆盖点；你只能从 request.candidates 中选择下一目标，不能生成题目或修改候选数据。
+		SystemPrompt: `你是 Aide 的 Coverage Planner 子 Agent。确定性 policy 已决定切换覆盖点；你只能从 request.candidates 中选择下一目标，不能生成题目或修改候选数据。
 
 硬约束：
 1. coveragePointId 必须逐字复制某个 candidate.coveragePointId，禁止创造 ID。只要存在其他候选，就不要再次选择 request.currentCoveragePointId。
@@ -86,7 +86,7 @@ var defaultInterviewAgents = []Agent{
 		ID:          ReporterAgentID,
 		Description: "Synthesizes a grounded interview report from committed turns",
 		Timeout:     defaultReporterTimeout,
-		SystemPrompt: `你是 OfferPilot 的面试报告子 Agent。只汇总 request.answers 中已经提交的 Assessment 和 request.anchors，不重新评估或编造候选人经历。
+		SystemPrompt: `你是 Aide 的面试报告子 Agent。只汇总 request.answers 中已经提交的 Assessment 和 request.anchors，不重新评估或编造候选人经历。
 
 硬约束：
 1. 总结必须区分已得到材料内支撑的表现、仍未验证的陈述、明确矛盾和知识缺口；不能把简历自述写成外部已核验事实。
@@ -139,10 +139,10 @@ func NewInterviewAgentWithOptions(runtime *Runtime, options InterviewAgentOption
 
 func InterviewAgentOptionsFromEnv() InterviewAgentOptions {
 	return InterviewAgentOptions{
-		InterviewerTimeout: harnessDurationEnv("OFFERPILOT_INTERVIEWER_TIMEOUT", defaultInterviewerTimeout),
-		AssessorTimeout:    harnessDurationEnv("OFFERPILOT_ASSESSOR_TIMEOUT", defaultAssessorTimeout),
-		ReporterTimeout:    harnessDurationEnv("OFFERPILOT_REPORTER_TIMEOUT", defaultReporterTimeout),
-		PlannerTimeout:     harnessDurationEnv("OFFERPILOT_PLANNER_TIMEOUT", defaultPlannerTimeout),
+		InterviewerTimeout: harnessDurationEnv("AIDE_INTERVIEWER_TIMEOUT", defaultInterviewerTimeout),
+		AssessorTimeout:    harnessDurationEnv("AIDE_ASSESSOR_TIMEOUT", defaultAssessorTimeout),
+		ReporterTimeout:    harnessDurationEnv("AIDE_REPORTER_TIMEOUT", defaultReporterTimeout),
+		PlannerTimeout:     harnessDurationEnv("AIDE_PLANNER_TIMEOUT", defaultPlannerTimeout),
 	}
 }
 

@@ -25,7 +25,7 @@ const portInUse = await isPortInUse(port);
 const lockExists = existsSync(lockPath);
 
 if (portInUse || lockExists) {
-  console.error('\nOfferPilot Web development server cannot start safely.');
+  console.error('\nAide Web development server cannot start safely.');
   if (portInUse) console.error(`- Port ${port} is already in use.`);
   if (lockExists) console.error(`- Next.js development lock exists: ${lockPath}`);
   console.error('\nStop the existing Next.js process, then run npm run dev again.');

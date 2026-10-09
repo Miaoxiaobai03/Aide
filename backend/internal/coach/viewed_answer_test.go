@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"offerpilot/backend/internal/interview"
+	"aide/backend/internal/interview"
 )
 
 func TestViewedAnswerAdvancePersistenceAndIndependentRetest(t *testing.T) {
