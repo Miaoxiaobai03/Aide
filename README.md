@@ -77,6 +77,30 @@ OPENAI_VISION_MODEL=deepseek-flash
 
 ---
 
+## 六个功能页面
+### 面试诊断&八股问答
+<img width="2440" height="1331" alt="image" src="https://github.com/user-attachments/assets/bc14cb14-2a6a-4a76-a8cc-724931efa8ec" />
+
+### 简历分析
+
+### JD匹配
+<img width="965" height="1388" alt="image" src="https://github.com/user-attachments/assets/113b60cd-5b25-4191-8348-77ef752485bc" />
+
+### 模拟面试-需要多模态语音模型
+<img width="1973" height="921" alt="image" src="https://github.com/user-attachments/assets/8efabcb8-30cb-4e9a-bf72-6d97fc920204" />
+
+
+### 能力雷达
+<img width="1774" height="1309" alt="image" src="https://github.com/user-attachments/assets/d3b9d76b-4fee-4413-8c7c-5c62be9f1b39" />
+
+### 训练历史
+<img width="1735" height="678" alt="image" src="https://github.com/user-attachments/assets/1b9f5d59-08bf-4461-8edc-8bc7416529cd" />
+
+
+
+
+
+
 ## 六个主要功能对应的设计
 
 以下解读对应本仓库一起提交的当前 Go + Next.js 代码。图中 Agent 指 Go 侧注册的受约束角色；直接模型调用不经过通用 Agent Loop。箭头表示代码可达路径，不表示每次请求都会触发所有分支。
