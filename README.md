@@ -63,7 +63,7 @@ OPENAI_VISION_MODEL=deepseek-flash
 .\start-aide.cmd
 ```
 
-双击 `start-aide.cmd` 也可以启动。它检查工具链和密钥、构建 Go API、在后台启动 Go `127.0.0.1:3001` 与 Next.js `localhost:3000`，等待两个健康检查通过后打开浏览器。已安装依赖并填写有效密钥后，无需手动分别启动两台服务。原脚本名 `start-offerpilot.cmd` 作为兼容别名保留。
+双击 `start-aide.cmd` 也可以启动。它检查工具链和密钥、构建 Go API、在后台启动 Go `127.0.0.1:3001` 与 Next.js `localhost:3000`，等待两个健康检查通过后打开浏览器。已安装依赖并填写有效密钥后，无需手动分别启动两台服务。
 
 ```powershell
 .\start-aide.cmd status
@@ -90,10 +90,10 @@ OPENAI_VISION_MODEL=deepseek-flash
 | Go HTTP | [server.go](./backend/internal/httpapi/server.go) | 校验请求、路由到 Coach、简历、匹配、面试和训练服务 |
 | Go 业务 | `coach`、`resumediagnosis`、`jobmatch`、`interview`、`webcrawler`、`harness` | 确定流程、构建模型输入、验证模型输出、记录状态 |
 | 检索 | 本地 Markdown 知识索引与 BM25 | 面试知识练习、自由问答、模拟面试题目依据；这里没有向量库链路 |
-| 存储 | SQLite `data/offerpilot.db` | 会话、练习、模拟面试、评估、复测、执行事件及历史 |
+| 存储 | SQLite `data/aide.db` | 会话、练习、模拟面试、评估、复测、执行事件及历史 |
 | 模型与语音 | 模型客户端；配置后可用 ASR/TTS | 文本生成、结构化评估、JD 图片转写、语音输入/播报 |
 
-启动装配见 [main.go](./backend/cmd/offerpilot-api/main.go)。当前共注册 **8 种角色 Agent**：`interviewer`、`assessor`、`coverage_planner`、`reporter`、`web_crawler`、`resume_matcher`、`resume_diagnostician`、`jd_transcriber`。前四个服务模拟面试；`web_crawler` 服务 URL 导入；`resume_matcher` 服务 JD 匹配；`resume_diagnostician` 服务简历诊断；`jd_transcriber` 只处理 JD 图片转文字。Coach 自由聊天及知识练习另有直接模型调用，不能把它们硬归到这八个角色中。
+启动装配见 [main.go](./backend/cmd/aide  -api/main.go)。当前共注册 **8 种角色 Agent**：`interviewer`、`assessor`、`coverage_planner`、`reporter`、`web_crawler`、`resume_matcher`、`resume_diagnostician`、`jd_transcriber`。前四个服务模拟面试；`web_crawler` 服务 URL 导入；`resume_matcher` 服务 JD 匹配；`resume_diagnostician` 服务简历诊断；`jd_transcriber` 只处理 JD 图片转文字。Coach 自由聊天及知识练习另有直接模型调用，不能把它们硬归到这八个角色中。
 
 各页面的数据关系：
 
