@@ -2,8 +2,6 @@
 
 **Aide** 意为“助理”。这是一个本地运行的 AI 面试训练与求职材料分析项目，网页提供面试诊断、简历诊断、JD 匹配、模拟面试、能力雷达与训练历史六个模块。浏览器界面由 Next.js/React/TypeScript 实现，业务编排、Agent、知识检索和 SQLite 持久化由 Go 实现。
 
-本仓库根据 [ranxi2001/OfferPilot](https://github.com/ranxi2001/OfferPilot) 的 MIT 许可代码整理；原版权与许可见 [LICENSE](./LICENSE)。仓库名和页面展示名为 Aide，部分 Go 包名、环境变量及旧启动脚本别名保留 `offerpilot`，便于追踪代码与兼容已有接口。
-
 ## 安装依赖并启动（Windows）
 
 ### 1. 安装系统工具
@@ -446,5 +444,4 @@ sequenceDiagram
 | 能力雷达 | `DashboardView` | `TrainingStats` | 打开页面不调用 | 读取已存训练结果后聚合 |
 | 训练历史 | `TrainingHistoryView` | history/weakness/retest | 仅准备与评估复测时 | SQLite 历史、来源、弱点、计划与尝试 |
 
-**技术栈定位：**TS/JS 主要掌握浏览器交互、文件预处理、同源代理和呈现；Go 掌握业务规则、状态转移、Agent 调用、检索、校验和持久化。因此读某个功能时，先从对应 React 组件找提交事件和 `/api/*`，再看 Next.js Route 转发，接着看 Go HTTP handler、Service/Agent，最后看 SQLite 和模型输出验证。模型负责需要语义判断或生成的节点；流程能否推进、何时提交与什么可展示由代码决定。
-
+技术栈定位：TS/JS 主要掌握浏览器交互、文件预处理、同源代理和呈现；Go 掌握业务规则、状态转移、Agent 调用、检索、校验和持久化。因此读某个功能时，先从对应 React 组件找提交事件和 `/api/*`，再看 Next.js Route 转发，接着看 Go HTTP handler、Service/Agent，最后看 SQLite 和模型输出验证。模型负责需要语义判断或生成的节点；流程能否推进、何时提交与什么可展示由代码决定。
