@@ -198,7 +198,7 @@ sequenceDiagram
 
 [practice.go](./backend/internal/coach/practice.go) 从知识题库建立练习页并冻结参考版本；提交答案后先存原文，再要求模型输出结构化成绩。[practice.go](./backend/internal/coach/practice.go) 的 validateEvaluation 校验 1–5 分及引文是否属于冻结参考；[grading.go](./backend/internal/coach/grading.go) 负责模型评分调用与解析。失败不冒充成功评估，允许重试。参考答案完全一致时有确定性处理分支。练习变式复测可直接调用文本模型；它不走模拟面试 `interviewer/assessor` 编排。题库由本地 Markdown 建立 BM25 索引，**不是向量召回**。
 
-**学习重点：**这里有两种上下文：自由聊天的多轮上下文与逐题评分的封闭上下文。可追溯原文和摘要共存；压缩是为模型输入节省预算，不是删除 SQLite 里的证据。
+**学习重点**这里有两种上下文：自由聊天的多轮上下文与逐题评分的封闭上下文。可追溯原文和摘要共存；压缩是为模型输入节省预算，不是删除 SQLite 里的证据。
 
 ---
 
@@ -245,7 +245,7 @@ sequenceDiagram
 
 Next.js [resume Route](./web/src/app/api/resume/route.ts) 转发至 Go 的 [resume_diagnosis.go](./backend/internal/httpapi/resume_diagnosis.go)。核心见 [resumediagnosis/agent.go](./backend/internal/resumediagnosis/agent.go)。Go 限制图片为最多三张 PNG/JPEG data URL，并校验输入。Agent 将提取文字作为**内容事实依据**，图像用于排版判断；这样可以避免仅凭视觉图像猜测简历事实。模型给结构化 JSON，Go 做字段、分数和模式校验，必要时最多一次修复，然后返回页面。
 
-**设计原因：**一份简历可以独立分析，不必创建持久面试会话或启动多角色循环。版式和语义是不同证据：文字可查内容，页图可查布局。当前这条链路不调用知识库、不参与雷达统计，也不自动把修改建议写回简历文件。扫描件若提取不出正文，页面不能仅凭渲染图完成这条诊断；URL 也取决于抓取能否获得正文。
+**设计原因**一份简历可以独立分析，不必创建持久面试会话或启动多角色循环。版式和语义是不同证据：文字可查内容，页图可查布局。当前这条链路不调用知识库、不参与雷达统计，也不自动把修改建议写回简历文件。扫描件若提取不出正文，页面不能仅凭渲染图完成这条诊断；URL 也取决于抓取能否获得正文。
 
 ---
 
@@ -296,7 +296,7 @@ sequenceDiagram
 
 前端 Next.js 路由是 [match Route](./web/src/app/api/match/route.ts)；图片转写见 [parse-image Route](./web/src/app/api/parse-image/route.ts) 和 Go [jobextract.go](./backend/internal/httpapi/jobextract.go)；匹配 Agent 见 [jobmatch/agent.go](./backend/internal/jobmatch/agent.go)。`jd_transcriber` 只把图片中的岗位文字变成输入，随后 `resume_matcher` 才做匹配。两次模型调用的职责不同，纯文本 JD 不调用图片 Agent。
 
-**设计原因：**岗位匹配要比较“要求”和“经历证据”的含义与覆盖度，不能只数关键词。Go 验证总分与四个权重分项、证据映射和必要字段，避免模型输出看似合理但算术不一致。当前 API 有证据数据，但 [MatchView.tsx](./web/src/components/MatchView.tsx) 没有完整展示 API 的每一项证据映射；用户看见的是前端已实现的汇总、匹配/缺失项与建议。匹配结果目前不自动写入训练历史、生成题目或调用 BM25 知识库。
+**设计原因**岗位匹配要比较“要求”和“经历证据”的含义与覆盖度，不能只数关键词。Go 验证总分与四个权重分项、证据映射和必要字段，避免模型输出看似合理但算术不一致。当前 API 有证据数据，但 [MatchView.tsx](./web/src/components/MatchView.tsx) 没有完整展示 API 的每一项证据映射；用户看见的是前端已实现的汇总、匹配/缺失项与建议。匹配结果目前不自动写入训练历史、生成题目或调用 BM25 知识库。
 
 ---
 
@@ -337,9 +337,9 @@ Next.js [interview Route](./web/src/app/api/interview/route.ts) 和 [interview-c
 
 主流程见 [interview/service.go](./backend/internal/interview/service.go)：输入首先由**确定性**画像抽取器解析为面试目标，见 [typed_profile_adapter.go](./backend/internal/interview/typed_profile_adapter.go)；不是“先用大模型解析简历/JD 再进入所有 Agent”。首题与后续目标使用 [interview_retriever.go](./backend/internal/knowledge/interview_retriever.go) 的 BM25 参考。参考用于命题和评估，但不应直接在问题里泄露。`interviewer` 提题；`assessor` 评估答案；[policy.go](./backend/internal/interview/policy.go) 的 `derivePolicy` 由代码选择追问、补前置、推进或结束，并限制追问深度；仅推进时 `coverage_planner` 从受限候选中选下一知识点。最后 `reporter` 根据已提交记录形成报告。角色入口见 [interview_agent.go](./backend/internal/harness/interview_agent.go)。
 
-答案提交采用 `clientAnswerId` 去重，当前题及版本校验防止过期回答进入错误轮次；关键步骤和事务结果落 SQLite，模型提案须过结构、业务规则及允许范围校验。**这里没有 TS CLI 式任意 tool_call 循环。**流程主控在 Go；四个 Agent 只在限定节点生成题目、评估、建议目标和写报告。题目数、反馈呈现策略、权限与证据约束也由程序掌握。
+答案提交采用 `clientAnswerId` 去重，当前题及版本校验防止过期回答进入错误轮次；关键步骤和事务结果落 SQLite，模型提案须过结构、业务规则及允许范围校验。**这里没有 TS CLI 式任意 tool_call 循环**流程主控在 Go；四个 Agent 只在限定节点生成题目、评估、建议目标和写报告。题目数、反馈呈现策略、权限与证据约束也由程序掌握。
 
-**RAG 发生的位置：**开始时为当前目标取参考；推进到新目标时再次检索。它是本地 Markdown 的 BM25 文本召回，非简历与 JD 的向量入库/向量相似搜索；简历/JD 主要用作画像与出题约束。
+**RAG 发生的位置**开始时为当前目标取参考；推进到新目标时再次检索。它是本地 Markdown 的 BM25 文本召回，非简历与 JD 的向量入库/向量相似搜索；简历/JD 主要用作画像与出题约束。
 
 ---
 
@@ -431,7 +431,7 @@ sequenceDiagram
 
 [weakness.go](./backend/internal/interview/weakness.go) 从**有效评估**提取弱点候选；含糊或证据不足的模型说法不会自动确认为差距。用户调整标签、标准或状态时用版本比较保护并发编辑。[retest.go](./backend/internal/interview/retest.go) 创建计划时冻结来源快照和待验证标准，队列与准备状态持久化；变式题由 `interviewer` 提议，原题和变式都由 `assessor` 验证是否测到目标，作答后仍由 `assessor` 逐标准评估。Go 校验目标标准配对及回答引文；失败的答案仍留记录供重试。读历史、筛选、比较本身**不调用模型**。
 
-**注意两个“复测”：**这里是模拟面试弱点驱动的计划复测，经 `interviewer + assessor`；面试诊断页的知识练习复测由 Coach 管理，保存于练习页体系，变式可直接用文本模型生成。它们可在历史/统计中关联查看，但触发条件、证据和状态机不同。
+**注意两个“复测”**这里是模拟面试弱点驱动的计划复测，经 `interviewer + assessor`；面试诊断页的知识练习复测由 Coach 管理，保存于练习页体系，变式可直接用文本模型生成。它们可在历史/统计中关联查看，但触发条件、证据和状态机不同。
 
 ---
 
