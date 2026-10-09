@@ -81,7 +81,7 @@ OPENAI_VISION_MODEL=deepseek-flash
 
 以下解读对应本仓库一起提交的当前 Go + Next.js 代码。图中 Agent 指 Go 侧注册的受约束角色；直接模型调用不经过通用 Agent Loop。箭头表示代码可达路径，不表示每次请求都会触发所有分支。
 
-### 为快速理解项目架构可以使用skill下的项目解读skill来进行报告输出辅助理解
+### 为快速理解项目架构可以使用项目解读skill来进行报告输出辅助理解：安装skill.md
 
 ## 0. 整体边界与共享组件
 
