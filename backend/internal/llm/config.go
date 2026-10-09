@@ -15,14 +15,17 @@ const (
 )
 
 type Config struct {
-	APIKey        string
-	BaseURL       string
-	Model         string
-	Timeout       time.Duration
-	MaxRetries    int
-	RetryBaseWait time.Duration
-	MaxTokens     int
-	Temperature   *float64
+	PreferJSONObject        bool
+	DisableThinking         bool
+	DisableStructuredRepair bool
+	APIKey                  string
+	BaseURL                 string
+	Model                   string
+	Timeout                 time.Duration
+	MaxRetries              int
+	RetryBaseWait           time.Duration
+	MaxTokens               int
+	Temperature             *float64
 }
 
 func ConfigFromEnv() Config {

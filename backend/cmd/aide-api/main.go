@@ -113,7 +113,27 @@ func main() {
 		if err != nil {
 			fatal("register resume matcher agent", err)
 		}
-		resumeDiagnosticianAgent, err = resumediagnosis.NewAgent(runtime, resumediagnosis.AgentOptions{
+		resumeConfig := resumediagnosis.ModelConfig(llm.ConfigFromEnv(), resumediagnosis.ModelOptions{
+			MaxTokens:       intEnv("AIDE_RESUME_MAX_TOKENS", 8192),
+			DisableThinking: boolEnv("AIDE_RESUME_DISABLE_THINKING", true),
+		})
+		logger.Info("resume diagnosis model configured", "max_tokens", resumeConfig.MaxTokens, "json_object", resumeConfig.PreferJSONObject, "thinking_disabled", resumeConfig.DisableThinking, "network_retries", resumeConfig.MaxRetries, "format_repair_disabled", resumeConfig.DisableStructuredRepair)
+		resumeClient, resumeErr := llm.New(resumeConfig)
+		if resumeErr != nil {
+			fatal("configure resume diagnosis model", resumeErr)
+		}
+		resumeRuntime, resumeErr := harness.NewRuntime(resumeClient, harness.Options{
+			MaxConcurrent: intEnv("AIDE_HARNESS_MAX_CONCURRENT", 4),
+			TraceSink: func(event harness.TraceEvent) {
+				if event.Type == harness.TraceError {
+					logger.Warn("resume harness call failed", "trace_id", event.TraceID, "duration_ms", event.Duration.Milliseconds(), "error", event.Error)
+				}
+			},
+		})
+		if resumeErr != nil {
+			fatal("create resume diagnosis runtime", resumeErr)
+		}
+		resumeDiagnosticianAgent, err = resumediagnosis.NewAgent(resumeRuntime, resumediagnosis.AgentOptions{
 			Timeout: durationEnv("AIDE_RESUME_DIAGNOSTICIAN_TIMEOUT", 120*time.Second),
 		})
 		if err != nil {

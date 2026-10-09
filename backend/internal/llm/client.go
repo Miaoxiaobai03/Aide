@@ -27,6 +27,7 @@ type completionRequest struct {
 	ResponseFormat map[string]any      `json:"response_format,omitempty"`
 	MaxTokens      int                 `json:"max_tokens,omitempty"`
 	Temperature    *float64            `json:"temperature,omitempty"`
+	Thinking       any                 `json:"thinking,omitempty"`
 }
 
 type completionMessage struct {
@@ -47,16 +48,28 @@ type visionImageURL struct {
 
 type completionResponse struct {
 	Choices []struct {
-		Message struct {
+		FinishReason string `json:"finish_reason"`
+		Message      struct {
 			Content json.RawMessage `json:"content"`
 		} `json:"message"`
 	} `json:"choices"`
+	Usage struct {
+		CompletionTokens int `json:"completion_tokens"`
+		Details          struct {
+			ReasoningTokens int `json:"reasoning_tokens"`
+		} `json:"completion_tokens_details"`
+	} `json:"usage"`
 	Error *struct {
 		Message string `json:"message"`
 		Type    string `json:"type"`
 		Code    any    `json:"code"`
 	} `json:"error,omitempty"`
 }
+
+var ErrOutputTruncated = errors.New("llm: structured output was truncated")
+var ErrStructuredOutput = errors.New("llm: structured output is invalid")
+
+func invalidOutput(err error) error { return fmt.Errorf("%w: %v", ErrStructuredOutput, err) }
 
 type HTTPError struct {
 	StatusCode int
@@ -102,6 +115,9 @@ func (c *Client) ChatJSON(ctx context.Context, messages []Message, out any) erro
 		return err
 	}
 
+	if c.config.PreferJSONObject {
+		return c.chatJSONObject(ctx, ensureJSONInstruction(messages, schema), out)
+	}
 	content, err := c.complete(ctx, messages, strictResponseFormat(schema))
 	if err != nil && schemaUnsupported(err) {
 		// The compatibility fallback consumes the single recovery budget.
@@ -111,7 +127,7 @@ func (c *Client) ChatJSON(ctx context.Context, messages []Message, out any) erro
 			return err
 		}
 		if decodeErr := DecodeJSON(content, out); decodeErr != nil {
-			return fmt.Errorf("llm: invalid structured response after one compatibility fallback: %w", decodeErr)
+			return fmt.Errorf("llm: invalid structured response after one compatibility fallback: %w", invalidOutput(decodeErr))
 		}
 		return nil
 	}
@@ -121,6 +137,9 @@ func (c *Client) ChatJSON(ctx context.Context, messages []Message, out any) erro
 	if err := DecodeJSON(content, out); err == nil {
 		return nil
 	} else {
+		if c.config.DisableStructuredRepair {
+			return invalidOutput(err)
+		}
 		repair := appendCopy(messages,
 			Message{Role: RoleAssistant, Content: compactForPrompt(content, 12000)},
 			Message{Role: RoleUser, Content: "Return the same answer again as one valid JSON object matching the required schema. Do not use Markdown fences or add commentary. Fix this validation error: " + err.Error()},
@@ -130,7 +149,7 @@ func (c *Client) ChatJSON(ctx context.Context, messages []Message, out any) erro
 			return fmt.Errorf("llm: repair structured response: %w", repairErr)
 		}
 		if decodeErr := DecodeJSON(repaired, out); decodeErr != nil {
-			return fmt.Errorf("llm: invalid structured response after one repair: %w", decodeErr)
+			return fmt.Errorf("llm: invalid structured response after one repair: %w", invalidOutput(decodeErr))
 		}
 		return nil
 	}
@@ -149,6 +168,9 @@ func (c *Client) ChatJSONWithImages(ctx context.Context, messages []Message, ima
 	if err != nil {
 		return err
 	}
+	if c.config.PreferJSONObject {
+		return c.chatJSONObjectMessages(ctx, multimodalMessages(ensureJSONInstruction(messages, schema), images), out)
+	}
 	wireMessages := multimodalMessages(messages, images)
 	content, err := c.completeMessages(ctx, wireMessages, strictResponseFormat(schema))
 	if err != nil && schemaUnsupported(err) {
@@ -161,7 +183,7 @@ func (c *Client) ChatJSONWithImages(ctx context.Context, messages []Message, ima
 			return err
 		}
 		if decodeErr := DecodeJSON(content, out); decodeErr != nil {
-			return fmt.Errorf("llm: invalid multimodal structured response after one compatibility fallback: %w", decodeErr)
+			return fmt.Errorf("llm: invalid multimodal structured response after one compatibility fallback: %w", invalidOutput(decodeErr))
 		}
 		return nil
 	}
@@ -171,6 +193,9 @@ func (c *Client) ChatJSONWithImages(ctx context.Context, messages []Message, ima
 	if decodeErr := DecodeJSON(content, out); decodeErr == nil {
 		return nil
 	} else {
+		if c.config.DisableStructuredRepair {
+			return invalidOutput(decodeErr)
+		}
 		repair := appendCompletionCopy(wireMessages,
 			completionMessage{Role: RoleAssistant, Content: compactForPrompt(content, 12000)},
 			completionMessage{Role: RoleUser, Content: "Return the same answer again as one valid JSON object matching the required schema. Do not use Markdown fences or add commentary. Fix this validation error: " + decodeErr.Error()},
@@ -180,7 +205,7 @@ func (c *Client) ChatJSONWithImages(ctx context.Context, messages []Message, ima
 			return fmt.Errorf("llm: repair multimodal structured response: %w", repairErr)
 		}
 		if finalErr := DecodeJSON(repaired, out); finalErr != nil {
-			return fmt.Errorf("llm: invalid multimodal structured response after one repair: %w", finalErr)
+			return fmt.Errorf("llm: invalid multimodal structured response after one repair: %w", invalidOutput(finalErr))
 		}
 		return nil
 	}
@@ -226,6 +251,9 @@ func (c *Client) completeMessages(ctx context.Context, messages []completionMess
 		ResponseFormat: format,
 		MaxTokens:      c.config.MaxTokens,
 		Temperature:    c.config.Temperature,
+	}
+	if c.config.DisableThinking {
+		request.Thinking = map[string]string{"type": "disabled"}
 	}
 	body, err := json.Marshal(request)
 	if err != nil {
@@ -327,12 +355,15 @@ func (c *Client) doRequest(parent context.Context, body []byte) (string, error) 
 	if len(decoded.Choices) == 0 {
 		return "", errors.New("llm: provider response has no choices")
 	}
+	if decoded.Choices[0].FinishReason == "length" || decoded.Choices[0].FinishReason == "max_tokens" {
+		return "", fmt.Errorf("%w: max_tokens=%d output_tokens=%d reasoning_tokens=%d", ErrOutputTruncated, c.config.MaxTokens, decoded.Usage.CompletionTokens, decoded.Usage.Details.ReasoningTokens)
+	}
 	content, err := decodeContent(decoded.Choices[0].Message.Content)
 	if err != nil {
 		return "", err
 	}
 	if strings.TrimSpace(content) == "" {
-		return "", errors.New("llm: provider returned empty content")
+		return "", invalidOutput(errors.New("llm: provider returned empty content"))
 	}
 	return content, nil
 }
@@ -423,4 +454,34 @@ func parseRetryAfter(value string) time.Duration {
 		return max(time.Until(timestamp), 0)
 	}
 	return 0
+}
+
+func (c *Client) chatJSONObject(ctx context.Context, messages []Message, out any) error {
+	wire := make([]completionMessage, 0, len(messages))
+	for _, m := range messages {
+		wire = append(wire, completionMessage{Role: m.Role, Content: m.Content})
+	}
+	return c.chatJSONObjectMessages(ctx, wire, out)
+}
+func (c *Client) chatJSONObjectMessages(ctx context.Context, messages []completionMessage, out any) error {
+	format := map[string]any{"type": "json_object"}
+	content, err := c.completeMessages(ctx, messages, format)
+	if err != nil {
+		return err
+	}
+	if err = DecodeJSON(content, out); err == nil {
+		return nil
+	}
+	if c.config.DisableStructuredRepair {
+		return invalidOutput(err)
+	}
+	repair := appendCompletionCopy(messages, completionMessage{Role: RoleAssistant, Content: compactForPrompt(content, 12000)}, completionMessage{Role: RoleUser, Content: "Return exactly one valid JSON object matching the previously provided schema. Fix this validation error: " + err.Error()})
+	content, err = c.completeMessages(ctx, repair, format)
+	if err != nil {
+		return err
+	}
+	if err = DecodeJSON(content, out); err != nil {
+		return invalidOutput(err)
+	}
+	return nil
 }

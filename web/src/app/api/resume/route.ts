@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: { code: 'backend_unavailable', message: '多模态简历诊断 Agent 暂时不可用', retryable: true } },
+      { error: { code: 'backend_unavailable', message: '简历诊断服务暂时无法连接；简历原文已保留，请稍后重试。', retryable: true } },
       { status: 502 },
     );
   }

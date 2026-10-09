@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"aide/backend/internal/llm"
 	"aide/backend/internal/resumediagnosis"
 )
 
@@ -15,6 +16,36 @@ type resumeDiagnosticianStub struct {
 	request resumediagnosis.Request
 	result  resumediagnosis.Result
 	err     error
+}
+
+func TestResumeDiagnosisExplainsFailuresWithoutLeakingProviderData(t *testing.T) {
+	for _, tc := range []struct {
+		err    error
+		status int
+		code   string
+	}{
+		{llm.ErrOutputTruncated, 502, "resume_output_truncated"},
+		{llm.ErrStructuredOutput, 502, "resume_result_invalid"},
+		{resumediagnosis.ErrInvalidResult, 502, "resume_result_invalid"},
+		{context.DeadlineExceeded, 504, "resume_diagnosis_timeout"},
+		{&llm.HTTPError{StatusCode: 402, Body: "SECRET_PROVIDER_RESPONSE"}, 503, "resume_model_balance_insufficient"},
+		{&llm.HTTPError{StatusCode: 401, Body: "SECRET_PROVIDER_RESPONSE"}, 503, "resume_model_auth_failed"},
+		{&llm.HTTPError{StatusCode: 429, Body: "SECRET_PROVIDER_RESPONSE"}, 503, "resume_model_rate_limited"},
+	} {
+		t.Run(tc.code, func(t *testing.T) {
+			stub := &resumeDiagnosticianStub{err: tc.err}
+			server, err := New(Config{}, Dependencies{Interview: &interviewStub{}, ResumeDiagnostician: stub})
+			if err != nil {
+				t.Fatal(err)
+			}
+			response := httptest.NewRecorder()
+			server.Handler().ServeHTTP(response, httptest.NewRequest(http.MethodPost, "/api/v1/resume/diagnose", strings.NewReader(`{"content":"完整原文保留"}`)))
+			body := response.Body.String()
+			if response.Code != tc.status || !strings.Contains(body, tc.code) || !strings.Contains(body, "原文已保留") || strings.Contains(body, "SECRET_") || strings.Contains(body, "overallScore") || stub.request.Content != "完整原文保留" {
+				t.Fatalf("status=%d body=%s", response.Code, body)
+			}
+		})
+	}
 }
 
 func (stub *resumeDiagnosticianStub) Diagnose(_ context.Context, request resumediagnosis.Request) (resumediagnosis.Result, error) {
