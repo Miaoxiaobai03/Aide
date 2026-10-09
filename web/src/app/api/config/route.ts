@@ -176,7 +176,7 @@ export async function POST(req: NextRequest) {
     }
 
     const lines: string[] = [
-      '# OfferPilot 模型配置 (由弹窗自动生成)',
+      '# Aide 模型配置 (由弹窗自动生成)',
       '# 手动编辑也会保留',
       '',
     ];

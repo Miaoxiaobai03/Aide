@@ -105,7 +105,7 @@ function download(blob: Blob, filename: string) {
 
 function buildMarkdown(messages: { role: string; content: string; thinking?: string; toolCalls?: string[] }[], sessionId: string | null): string {
   const lines: string[] = [];
-  lines.push('# OfferPilot 面试诊断报告\n');
+  lines.push('# Aide 面试诊断报告\n');
   lines.push(`**日期**: ${new Date().toLocaleDateString('zh-CN')}`);
   if (sessionId) lines.push(`**会话**: ${sessionId.slice(0, 8)}`);
   lines.push(`**诊断轮次**: ${messages.filter((m) => m.role === 'user').length}`);
@@ -123,7 +123,7 @@ function buildMarkdown(messages: { role: string; content: string; thinking?: str
     }
   }
 
-  lines.push('\n*由 OfferPilot AI Interview Diagnosis Agent 生成*');
+  lines.push('\n*由 Aide AI Interview Diagnosis Agent 生成*');
   return lines.join('\n');
 }
 
@@ -148,7 +148,7 @@ function buildPDFHtml(markdown: string): string {
 <html>
 <head>
 <meta charset="utf-8">
-<title>OfferPilot 诊断报告</title>
+<title>Aide 诊断报告</title>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; color: #1e293b; line-height: 1.6; }
   h1 { color: #1e3a5f; border-bottom: 2px solid #0ea5e9; padding-bottom: 8px; }

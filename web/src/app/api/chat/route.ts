@@ -145,7 +145,7 @@ function generateMockResponse(input: string): string {
   const lower = input.toLowerCase();
 
   if (lower.includes('你好') || lower.includes('hello')) {
-    return `## 你好！\n\n我是 **OfferPilot 面试诊断 Agent**，专注于 AI Agent / LLM 工程方向的面试辅导。\n\n### 我能帮你做什么：\n\n| 功能 | 说明 |\n|:---|:---|\n| 🎯 诊断回答 | 输入面试题 + 回答，获取评分与改进建议 |\n| 🔍 分析考点 | 拆解面试题的考察维度和得分点 |\n| 🎲 模拟面试 | 按方向和难度生成追问序列 |\n| 📝 优化表达 | 帮你重写回答，结构化 + 加深度 |\n\n试试输入一个面试问题开始吧！`;
+    return `## 你好！\n\n我是 **Aide 面试诊断 Agent**，专注于 AI Agent / LLM 工程方向的面试辅导。\n\n### 我能帮你做什么：\n\n| 功能 | 说明 |\n|:---|:---|\n| 🎯 诊断回答 | 输入面试题 + 回答，获取评分与改进建议 |\n| 🔍 分析考点 | 拆解面试题的考察维度和得分点 |\n| 🎲 模拟面试 | 按方向和难度生成追问序列 |\n| 📝 优化表达 | 帮你重写回答，结构化 + 加深度 |\n\n试试输入一个面试问题开始吧！`;
   }
 
   if (lower.includes('claude code') || lower.includes('codex') || lower.includes('hormuz') || lower.includes('主流的 agent') || lower.includes('主要差异')) {
@@ -170,7 +170,7 @@ function generateMockResponse(input: string): string {
 可以改成“三层对比”：第一是定位，主流 Agent 是通用执行器，我的是求职/面试垂直 Agent；第二是能力边界，主流 Agent 强在文件系统、代码执行和多工具编排，我更强调诊断流程、题库/RAG、评分 rubric 和报告输出；第三是工程取舍，垂直 Agent 工具少但更稳定，状态机和 prompt 可以围绕固定业务优化。
 
 ### 参考回答
-“Claude Code、Codex 这类 Agent 更像通用工程执行器，核心能力是理解仓库、编辑文件、运行测试、处理权限和长任务规划。我的 OfferPilot 是垂直求职辅导 Agent，目标不是覆盖所有任务，而是把面试诊断、简历分析、JD 匹配、语音转写和报告生成做成固定业务闭环。所以我的工具数量更少，但工具语义更贴近业务；上下文里会内置面试题库、评分维度和候选人历史；评测也不是看代码是否编译，而是看诊断是否命中考点、建议是否可执行。这个取舍让系统复杂度更低，也更容易做领域优化。”`;
+“Claude Code、Codex 这类 Agent 更像通用工程执行器，核心能力是理解仓库、编辑文件、运行测试、处理权限和长任务规划。我的 Aide 是垂直求职辅导 Agent，目标不是覆盖所有任务，而是把面试诊断、简历分析、JD 匹配、语音转写和报告生成做成固定业务闭环。所以我的工具数量更少，但工具语义更贴近业务；上下文里会内置面试题库、评分维度和候选人历史；评测也不是看代码是否编译，而是看诊断是否命中考点、建议是否可执行。这个取舍让系统复杂度更低，也更容易做领域优化。”`;
   }
 
   if (lower.includes('react') || lower.includes('循环') || lower.includes('架构')) {

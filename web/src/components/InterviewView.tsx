@@ -368,7 +368,7 @@ export function InterviewView({ resumeRequest, onResumeConsumed }: { resumeReque
       id: `${id}:accepted`,
       stage: 'request',
       label: action === 'answer' ? '回答已接收' : action === 'start' ? '面试请求已接收' : '报告请求已接收',
-      detail: '请求已进入 OfferPilot，等待 Go Harness 执行。',
+      detail: '请求已进入 Aide，等待 Go Harness 执行。',
       status: 'completed',
       at: startedAt,
     };
