@@ -1,0 +1,28 @@
+# These entries power the local settings display. Go reads OPENAI_* directly.
+text:
+  - name: DeepSeek
+    provider: openai
+    model: ${OPENAI_MODEL}
+    env_key: OPENAI_API_KEY
+    base_url: ${OPENAI_BASE_URL}
+
+tts:
+  - name: MiMo TTS
+    provider: mimo
+    model: ${MIMO_TTS_MODEL}
+    env_key: MIMO_API_KEY
+    base_url: ${MIMO_BASE_URL}
+    voice: ${MIMO_TTS_VOICE}
+
+multimodal:
+  - name: JD image transcription
+    provider: openai
+    model: ${OPENAI_VISION_MODEL}
+    env_key: OPENAI_API_KEY
+    base_url: ${OPENAI_BASE_URL}
+
+  - name: MiMo ASR
+    provider: mimo
+    model: ${MIMO_ASR_MODEL}
+    env_key: MIMO_API_KEY
+    base_url: ${MIMO_BASE_URL}

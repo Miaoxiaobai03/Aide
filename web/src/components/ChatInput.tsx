@@ -1,0 +1,220 @@
+'use client';
+
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { Mic, Paperclip, Send, Square, Sparkles } from 'lucide-react';
+
+interface Props {
+  onSend: (message: string) => void;
+  onAudioAnswer?: (audio: Blob, fileName?: string) => void;
+  disabled?: boolean;
+  isTranscribing?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
+  keepDraft?: boolean;
+  placeholder?: string;
+  preserveWhitespace?: boolean;
+}
+
+export function ChatInput({ onSend, onAudioAnswer, disabled, isTranscribing, value, onChange, keepDraft, placeholder, preserveWhitespace }: Props) {
+  const [localInput, setLocalInput] = useState('');
+  const input = value ?? localInput;
+  const setInput = (text: string) => { setLocalInput(text); onChange?.(text); };
+  const [isRecording, setIsRecording] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const recordingAnswerRef = useRef(onAudioAnswer);
+  const samplesRef = useRef<Float32Array[]>([]);
+  const sampleRateRef = useRef(16000);
+
+  useEffect(()=>()=>{processorRef.current?.disconnect();streamRef.current?.getTracks().forEach(track=>track.stop());void audioContextRef.current?.close();},[]);
+  const handleSubmit = useCallback(() => {
+    if (!input.trim() || disabled || isTranscribing) return;
+    onSend(preserveWhitespace ? input : input.trim());
+    if (!keepDraft) setInput('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  }, [input, disabled, isTranscribing, onSend, keepDraft, onChange, preserveWhitespace]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    const el = e.target;
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+  };
+
+  const handleAudioFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && onAudioAnswer) {
+      onAudioAnswer(file, file.name);
+    }
+    e.target.value = '';
+  };
+
+  const toggleRecording = async () => {
+    if (isRecording) {
+      stopRecording();
+      return;
+    }
+    if (!onAudioAnswer || disabled || isTranscribing) return;
+
+    recordingAnswerRef.current = onAudioAnswer;
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+    const audioContext = new AudioContextCtor();
+    const source = audioContext.createMediaStreamSource(stream);
+    const processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+    samplesRef.current = [];
+    sampleRateRef.current = audioContext.sampleRate;
+    processor.onaudioprocess = (event) => {
+      samplesRef.current.push(new Float32Array(event.inputBuffer.getChannelData(0)));
+    };
+
+    source.connect(processor);
+    processor.connect(audioContext.destination);
+    streamRef.current = stream;
+    audioContextRef.current = audioContext;
+    processorRef.current = processor;
+    setIsRecording(true);
+  };
+
+  const stopRecording = () => {
+    processorRef.current?.disconnect();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    void audioContextRef.current?.close();
+    processorRef.current = null;
+    streamRef.current = null;
+    audioContextRef.current = null;
+    setIsRecording(false);
+
+    const wav = encodeWav(samplesRef.current, sampleRateRef.current);
+    recordingAnswerRef.current?.(wav, `recording-${Date.now()}.wav`);
+  };
+
+  return (
+    <div className="border-t border-slate-200/80 bg-white/80 backdrop-blur-sm px-4 py-4">
+      <div className="mx-auto max-w-3xl">
+        <div className="flex items-end gap-2 rounded-2xl border border-slate-200 bg-white shadow-card px-3 py-2 focus-within:border-accent/50 focus-within:shadow-glow transition-all">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="audio/*"
+            className="hidden"
+            onChange={handleAudioFile}
+          />
+
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={disabled || isTranscribing}
+            title="上传录音"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-accent disabled:opacity-30 transition-all"
+          >
+            <Paperclip size={16} />
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleRecording}
+            disabled={disabled || isTranscribing}
+            title={isRecording ? '停止录音' : '开始录音'}
+            className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all disabled:opacity-30 ${
+              isRecording
+                ? 'bg-red-50 text-red-500 hover:bg-red-100'
+                : 'text-slate-400 hover:bg-slate-100 hover:text-accent'
+            }`}
+          >
+            {isRecording ? <Square size={14} /> : <Mic size={16} />}
+          </button>
+
+          <textarea
+            ref={textareaRef}
+            value={input}
+            onChange={handleInput}
+            onKeyDown={handleKeyDown}
+            placeholder={isTranscribing ? '正在转写录音...' : placeholder ?? '输入面试题或你的回答...'}
+            disabled={disabled || isTranscribing}
+            rows={1}
+            className="flex-1 resize-none border-0 bg-transparent px-2 py-2 text-sm text-slate-700 placeholder-slate-400 outline-none disabled:opacity-50"
+          />
+
+          <button
+            onClick={handleSubmit}
+            disabled={disabled || isTranscribing || !input.trim()}
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white shadow-sm hover:bg-accent-dark disabled:opacity-30 disabled:shadow-none transition-all"
+          >
+            {disabled ? (
+              <Sparkles size={16} className="animate-pulse-slow" />
+            ) : (
+              <Send size={15} />
+            )}
+          </button>
+        </div>
+
+        <p className="mt-2 text-center text-[11px] text-slate-400">
+          Shift+Enter 换行 · 支持语音输入 · 回答越详细，诊断越精准
+        </p>
+      </div>
+    </div>
+  );
+}
+
+declare global {
+  interface Window {
+    webkitAudioContext?: typeof AudioContext;
+  }
+}
+
+function encodeWav(chunks: Float32Array[], sampleRate: number): Blob {
+  const length = chunks.reduce((total, chunk) => total + chunk.length, 0);
+  const pcm = new Int16Array(length);
+  let offset = 0;
+
+  for (const chunk of chunks) {
+    for (let i = 0; i < chunk.length; i++) {
+      const sample = Math.max(-1, Math.min(1, chunk[i]));
+      pcm[offset++] = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
+    }
+  }
+
+  const buffer = new ArrayBuffer(44 + pcm.length * 2);
+  const view = new DataView(buffer);
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, 36 + pcm.length * 2, true);
+  writeString(view, 8, 'WAVE');
+  writeString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  writeString(view, 36, 'data');
+  view.setUint32(40, pcm.length * 2, true);
+
+  let byteOffset = 44;
+  for (let i = 0; i < pcm.length; i++) {
+    view.setInt16(byteOffset, pcm[i], true);
+    byteOffset += 2;
+  }
+
+  return new Blob([buffer], { type: 'audio/wav' });
+}
+
+function writeString(view: DataView, offset: number, value: string): void {
+  for (let i = 0; i < value.length; i++) {
+    view.setUint8(offset + i, value.charCodeAt(i));
+  }
+}

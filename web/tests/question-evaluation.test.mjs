@@ -1,0 +1,20 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+import {it} from 'node:test';
+import assert from 'node:assert/strict';
+import ts from 'typescript';
+import {createElement} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+const require=createRequire(import.meta.url);
+let source=readFileSync(new URL('../src/components/QuestionConversation.tsx',import.meta.url),'utf8');
+source=source.replace("import {ChatMessage} from './ChatMessage';",'const ChatMessage=()=>null;').replace("import {MarkdownContent} from './MarkdownContent';",'const MarkdownContent=()=>null;');
+let code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+code=code.replaceAll('"react/jsx-runtime"','"'+pathToFileURL(require.resolve('react/jsx-runtime')).href+'"');
+const {QuestionConversation}=await import('data:text/javascript,'+encodeURIComponent(code));
+it('latest assisted content score cannot replace the last independent score; superseded feedback is labelled history',()=>{
+ const evaluation=n=>({correctness:n,coverage:n,explanation:n,strengths:[],gaps:[],advice:'继续练习'});
+ const c={plan:{questions:[{id:'q',reference:'参考'}],taught:{1:true},attempts:[{id:'a',status:'succeeded',assisted:false,evaluation:evaluation(2)},{id:'b',status:'succeeded',assisted:true,evaluation:evaluation(5)},{id:'c',status:'failed',assisted:false}]},messages:[{id:'old',kind:'evaluation',content:JSON.stringify(evaluation(1)),status:'superseded'}]};
+ const html=renderToStaticMarkup(createElement(QuestionConversation,{c,questionId:'q',collapsed:true,busy:false,onCollapse:()=>{},onReference:()=>{},onFragment:()=>{},onError:()=>{}}));
+ assert.match(html,/最新有效内容评价.*辅助作答/);assert.match(html,/最近有效独立评价：正确性 2\/5/);assert.match(html,/历史评分版本/);assert.ok(!html.includes('此条输出未完成'));
+});
