@@ -82,6 +82,8 @@ OPENAI_VISION_MODEL=deepseek-flash
 <img width="2440" height="1331" alt="image" src="https://github.com/user-attachments/assets/bc14cb14-2a6a-4a76-a8cc-724931efa8ec" />
 
 ### 简历分析
+<img width="2058" height="1413" alt="image" src="https://github.com/user-attachments/assets/9e4dffbb-643d-41ea-a86d-e59bc40a1380" />
+
 
 ### JD匹配
 <img width="965" height="1388" alt="image" src="https://github.com/user-attachments/assets/113b60cd-5b25-4191-8348-77ef752485bc" />
