@@ -3,7 +3,7 @@
 **Aide** 意为“助理”。这是一个本地运行的 AI 面试训练与求职材料分析项目，网页提供面试诊断、简历诊断、JD 匹配、模拟面试、能力雷达与训练历史六个模块。浏览器界面由 Next.js/React/TypeScript 实现，业务编排、Agent、知识检索和 SQLite 持久化由 Go 实现。
 
 ## Todo 
-1. 添加embedding，形成BM25+Embedding双路召回，RRF 融合，SQLite 保存向量
+1. 添加embedding，形成BM25+Embedding双路召回，RRF 融合，SQLite 保存向量 见：Aide-双路召回改进计划-20261011.md
 <img width="529" height="419" alt="image" src="https://github.com/user-attachments/assets/af85579e-baca-495f-abe6-8d04fe633388" />
 
 2. 参考开源agent的上下文管理系统对当前对话上下文进行升级
