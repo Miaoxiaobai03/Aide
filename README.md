@@ -4,20 +4,8 @@
 
 ## Todo 
 1. 添加embedding，形成BM25+Embedding双路召回，RRF 融合，SQLite 保存向量
-用户自由提问
-      ↓
-确定本次检索问题
-      ├─ BM25：召回前 10 项
-      └─ 问题向量化 → 本地计算相似度：召回前 10 项
-                         ↓
-                  RRF 融合、去重
-                         ↓
-                 选择相关知识片段
-                         ↓
-        与历史交流、当前问题一起组装上下文
-                         ↓
-                模型回答并标明来源
-   
+<img width="529" height="419" alt="image" src="https://github.com/user-attachments/assets/af85579e-baca-495f-abe6-8d04fe633388" />
+
 2. 参考开源agent的上下文管理系统对当前对话上下文进行升级
 
 ## 安装依赖并启动（Windows）
