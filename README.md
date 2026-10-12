@@ -3,10 +3,15 @@
 **Aide** 意为“助理”。这是一个本地运行的 AI 面试训练与求职材料分析项目，网页提供面试诊断、简历诊断、JD 匹配、模拟面试、能力雷达与训练历史六个模块。浏览器界面由 Next.js/React/TypeScript 实现，业务编排、Agent、知识检索和 SQLite 持久化由 Go 实现。
 
 ## Todo 
-1. 添加embedding，形成BM25+Embedding双路召回，RRF 融合，SQLite 保存向量 见：Aide-双路召回改进计划-20261011.md
+1. 添加embedding，形成BM25+Embedding双路召回，RRF 融合，SQLite 保存向量
+chroma向量数据库的配置和当前题库的百炼模型向量化 之后实现rerank 并且使用rrf-和bm25的混合检错->更新这条链路
+"双路召回改进计划-20261011.md"
 <img width="529" height="419" alt="image" src="https://github.com/user-attachments/assets/af85579e-baca-495f-abe6-8d04fe633388" />
 
 2. 参考开源agent的上下文管理系统对当前对话上下文进行升级
+
+3. 自由问答和八股在压缩后 应对摘要中没有细节但却被用户准问的问题 需要让模型拥有仅仅在这个触发条件下从数据库召回原始数据的能力：Go校验并直接提取提供或者工具化
+"coach-compressed-original-recall-workflow-20261012.md"
 
 ## 安装依赖并启动（Windows）
 
